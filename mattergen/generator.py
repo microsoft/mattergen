@@ -267,7 +267,7 @@ class CrystalGenerator:
         target_compositions_dict: list[dict[str, float]] | None = None,
     ) -> ConditionLoader:
         condition_loader_partial = instantiate(sampling_config.condition_loader_partial)
-        if target_compositions_dict is None:
+        if not target_compositions_dict:
             return condition_loader_partial(properties=self.properties_to_condition_on)
 
         return condition_loader_partial(target_compositions_dict=target_compositions_dict)
@@ -287,7 +287,7 @@ class CrystalGenerator:
         else:
             # avoid modifying the original list
             sampling_config_overrides = self.sampling_config_overrides.copy()
-        if target_compositions_dict is None:
+        if not target_compositions_dict:
             # Default `condition_loader_partial` is
             # mattergen.common.data.condition_factory.get_number_of_atoms_condition_loader
             sampling_config_overrides += [
