@@ -298,7 +298,6 @@ class CrystalGenerator:
             ]
         else:
             # `condition_loader_partial` for fixed atom type (crystal structure prediction)
-            breakpoint()
             num_structures_to_generate_per_composition = (
                 num_batches * batch_size // len(target_compositions_dict)
             )
@@ -367,7 +366,6 @@ class CrystalGenerator:
 
         print("\nSampling config:")
         print(OmegaConf.to_yaml(sampling_config, resolve=True))
-        breakpoint()
         condition_loader = self.get_condition_loader(sampling_config, target_compositions_dict)
 
         sampler_partial = instantiate(sampling_config.sampler_partial)
