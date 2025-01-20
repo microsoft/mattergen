@@ -328,7 +328,6 @@ class CrystalGenerator:
             sampling_config = hydra.compose(
                 config_name=sampling_config_name, overrides=sampling_config_overrides
             )
-        breakpoint()
         return sampling_config
 
     def prepare(self) -> None:
