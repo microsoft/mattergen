@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 from pymatgen.core.structure import Structure
 
 from mattergen.evaluation.metrics.evaluator import MetricsEvaluator

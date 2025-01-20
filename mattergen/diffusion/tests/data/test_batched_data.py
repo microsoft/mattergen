@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import torch
 
 from mattergen.diffusion.data.batched_data import collate_fn

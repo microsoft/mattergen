@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 from dataclasses import dataclass
 from functools import cached_property, lru_cache
 from typing import Literal

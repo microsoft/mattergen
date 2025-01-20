@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import argparse
 import sys
 from typing import Callable, TypeVar, cast

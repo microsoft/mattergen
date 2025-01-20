@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 """
 This is an integeratation test of reverse sampling. For a known data distribution that
 is Gaussian, we substitute the known ground truth score for an approximate model

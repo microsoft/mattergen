@@ -1,6 +1,8 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import random
-from functools import wraps
-from typing import Callable, Dict, List
+from typing import Dict, List
 
 import numpy
 import pytest

@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import warnings
 from dataclasses import dataclass, field
 from functools import cached_property

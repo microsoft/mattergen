@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 from collections import defaultdict
 from itertools import combinations
 from typing import Any, Callable, Iterable, TypeVar

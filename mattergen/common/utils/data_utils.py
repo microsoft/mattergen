@@ -1,5 +1,7 @@
+# Copyright (c) 2021 Tian Xie, Xiang Fu
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # Adapted from https://github.com/txie-93/cdvae/blob/main/cdvae/common/data_utils.py
-# Originally licensed under the MIT License.
 
 from functools import lru_cache
 
@@ -8,9 +10,7 @@ import torch
 from pymatgen.core import Element
 
 from mattergen.common.data.chemgraph import ChemGraph
-from mattergen.common.utils.ocp_graph_utils import (
-    radius_graph_pbc as radius_graph_pbc_ocp,
-)
+from mattergen.common.utils.ocp_graph_utils import radius_graph_pbc as radius_graph_pbc_ocp
 
 EPSILON = 1e-5
 

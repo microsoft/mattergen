@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 from functools import cached_property
 from typing import Iterable, Iterator, Mapping
 

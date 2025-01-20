@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 NUM_ATOMS_DISTRIBUTIONS = {
     "ALEX_MP_20": {
         1: 0.0002303828963737732,

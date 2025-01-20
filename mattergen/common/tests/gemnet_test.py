@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 from copy import deepcopy
 from itertools import chain, permutations
 from typing import List, Tuple

@@ -1,4 +1,8 @@
 """
+Copyright 2020 The Google Research Authors.
+Copyright (c) Microsoft Corporation.
+Licensed under the MIT License.
+
 Based on code from https://github.com/yang-song/score_sde_pytorch/blob/main/sde_lib.py
 which is released under Apache licence.
 

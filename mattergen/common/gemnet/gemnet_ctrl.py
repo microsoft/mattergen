@@ -1,10 +1,8 @@
-"""
-Adapted from https://github.com/FAIR-Chem/fairchem/blob/main/src/fairchem/core/models/gemnet/gemnet.py.
-Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Facebook, Inc. and its affiliates.
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
-This source code is licensed under the MIT license found at https://github.com/FAIR-Chem/fairchem/blob/main/LICENSE.md.
-
-"""
+# Adapted from https://github.com/FAIR-Chem/fairchem/blob/main/src/fairchem/core/models/gemnet/gemnet.py.
 
 from typing import Dict, List, Optional
 

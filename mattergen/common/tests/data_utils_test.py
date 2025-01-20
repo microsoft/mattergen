@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 # Adapted from https://github.com/txie-93/cdvae/blob/main/cdvae/common/data_utils_test.py.
 # Published under MIT license: https://github.com/txie-93/cdvae/blob/main/LICENSE.
 

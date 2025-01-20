@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import numpy as np
 from ase import Atoms
 from mattersim.applications.batch_relax import BatchRelaxer

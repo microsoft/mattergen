@@ -1,3 +1,7 @@
+# Copyright (c) 2022 The Google Research Authors.
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 # Adapted from https://github.com/google-research/google-research/blob/master/d3pm/text/diffusion.py
 # Siginificant changes:
 # * adapt code style/ formatting

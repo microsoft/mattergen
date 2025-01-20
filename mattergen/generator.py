@@ -1,10 +1,10 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import io
-import json
 import os
-import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal
 from zipfile import ZipFile
 
 import ase.io

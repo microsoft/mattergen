@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import fnmatch
 import os
 from dataclasses import asdict, dataclass, field

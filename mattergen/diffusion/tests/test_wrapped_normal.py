@@ -1,11 +1,8 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import torch
-from torch.distributions import (
-    Categorical,
-    Independent,
-    MixtureSameFamily,
-    MultivariateNormal,
-    Normal,
-)
+from torch.distributions import Categorical, Independent, MixtureSameFamily, Normal
 
 from mattergen.diffusion.wrapped.wrapped_normal_loss import get_pbc_offsets, wrapped_normal_score
 from mattergen.diffusion.wrapped.wrapped_sde import wrap_at_boundary

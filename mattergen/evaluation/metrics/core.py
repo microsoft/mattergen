@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import abc
 from copy import deepcopy
 from functools import cached_property

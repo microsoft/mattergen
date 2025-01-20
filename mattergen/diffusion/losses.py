@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 from functools import partial
 from typing import Dict, Literal, Optional, Protocol, Tuple, TypeVar
 

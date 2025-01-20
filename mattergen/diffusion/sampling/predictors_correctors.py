@@ -1,9 +1,12 @@
-"""Adapted from https://github.com/yang-song/score_sde_pytorch which is released under Apache license.
+# Copyright 2020 The Google Research Authors.
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
-Key changes:
-- Introduced batch_idx argument to work with graph-like data (e.g. molecules)
-- Introduced `..._given_score` methods so that multiple fields can be sampled at once using a shared score model. See PredictorCorrector for how this is used.
-"""
+# Adapted from https://github.com/yang-song/score_sde_pytorch which is released under Apache license.
+
+# Key changes:
+# - Introduced batch_idx argument to work with graph-like data (e.g. molecules)
+# - Introduced `..._given_score` methods so that multiple fields can be sampled at once using a shared score model. See PredictorCorrector for how this is used.
 
 import abc
 

@@ -1,11 +1,9 @@
 """
+Copyright (c) Facebook, Inc. and its affiliates.
+Copyright (c) Microsoft Corporation.
+Licensed under the MIT License.
 Code derived from the OCP codebase:
 https://github.com/Open-Catalyst-Project/ocp
-
-Copyright (c) Facebook, Inc. and its affiliates.
-
-This source code is licensed under the MIT license found in
-https://github.com/Open-Catalyst-Project/ocp/blob/main/LICENSE.md.
 """
 
 import sys

@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 """Adapted from https://github.com/yang-song/score_sde_pytorch which is released under Apache license.
 
 Key changes:

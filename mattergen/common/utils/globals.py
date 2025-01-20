@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 """Note that importing this module has two side effects:
 1. It sets the environment variable `PROJECT_ROOT` to the root of the explorers project.
 2. It registers a new resolver for OmegaConf, `eval`, which allows us to use `eval` in our config files.

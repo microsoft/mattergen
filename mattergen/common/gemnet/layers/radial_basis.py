@@ -1,10 +1,10 @@
 """
-Adapted from https://github.com/FAIR-Chem/fairchem/blob/main/src/fairchem/core/models/gemnet/layers/radial_basis.py.
 Copyright (c) Facebook, Inc. and its affiliates.
-
-This source code is licensed under the MIT license found at https://github.com/FAIR-Chem/fairchem/blob/main/LICENSE.md.
-
+Copyright (c) Microsoft Corporation.
+Licensed under the MIT License.
+Adapted from https://github.com/FAIR-Chem/fairchem/blob/main/src/fairchem/core/models/gemnet/layers/radial_basis.py.
 """
+
 import math
 
 import numpy as np

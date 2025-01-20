@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 from collections import defaultdict
 from contextlib import nullcontext
 from typing import Callable, Dict, List, Type, Union
