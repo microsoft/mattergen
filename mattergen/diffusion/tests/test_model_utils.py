@@ -18,18 +18,13 @@ def test_conversions_match(sde_type):
     t = torch.linspace(0.1, 0.9, 10)
     clean = torch.randn(10, 3)
     z = torch.randn_like(clean)
-    mean, std = sde.marginal_prob(x=clean, t=t, batch_idx=torch.arange(10), batch=None)
-    noisy = mean + std * z
+    _, std = sde.marginal_prob(x=clean, t=t, batch_idx=torch.arange(10), batch=None)
     _convert = partial(
         convert_model_out_to_score,
         sde=sde,
         batch_idx=torch.arange(10),
-        noisy_x=noisy,
         t=t,
         batch=None,
     )
     score1 = _convert(model_target=ModelTarget.score_times_std, model_out=-z)
-    score2 = _convert(model_target=ModelTarget.noise, model_out=z)
-    score3 = _convert(model_target=ModelTarget.clean_data, model_out=clean)
-    assert torch.allclose(score1, score2)
-    assert torch.allclose(score1, score3, atol=1e-4)  # slack tolerance for this test
+    assert torch.allclose(score1, -z / std, atol=1e-4)  # slack tolerance for this test
