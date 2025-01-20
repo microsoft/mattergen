@@ -171,7 +171,12 @@ python scripts/run.py data_module=alex_mp_20 ~trainer.logger trainer.accumulate_
 > [!TIP]
 > Note that a single GPU's memory usually is not enough for the batch size of 512, hence we accumulate gradients over 4 batches. If you still run out of memory, increase this further.
 
+#### Crystal structure prediction
+Even though not a focus of our paper, you can also train MatterGen in crystal structure prediction (CSP) mode, where it does not denoise the atom types during generation. 
+This gives you the ability to condition on a specific chemical formula for generation. You can train MatterGen in this mode by passing `--config-name=csp` to `run.py`.
 
+To sample from this model, pass `--target_compositions=[{"<element1>": <number_of_element1_atoms>, "<element2>": <number_of_element2_atoms>, ..., "<elementN>": <number_of_elementN_atoms>}] --sampling-config-name=csp` to `generate.py`. 
+An example composition could be `--target_compositions=[{"Na": 1, "Cl": 1}]`.
 ### Fine-tuning on property data
 
 Assume that you have a MatterGen base model at `$MODEL_PATH` (e.g., `checkpoints/mattergen_base`). You can fine-tune MatterGen using the following command.

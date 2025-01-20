@@ -1,0 +1,15 @@
+_target_: diffusion.corruption.multi_corruption.MultiCorruption
+sdes:
+  pos: 
+    _target_: mattergen.common.diffusion.corruption.NumAtomsVarianceAdjustedWrappedVESDE
+    wrapping_boundary: 1.0
+    sigma_max: 5.0
+    limit_info_key: num_atoms
+
+  cell: 
+    _target_: mattergen.common.diffusion.corruption.LatticeVPSDE.from_vpsde_config
+    vpsde_config:
+      beta_min: 0.1
+      beta_max: 20
+      limit_density: ${data_module.average_density}
+      limit_var_scaling_constant: 0.25
