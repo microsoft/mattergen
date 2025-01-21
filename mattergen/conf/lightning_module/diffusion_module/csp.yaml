@@ -1,10 +1,9 @@
-_target_: diffusion.diffusion_module.DiffusionModule
+_target_: mattergen.diffusion.diffusion_module.DiffusionModule
 model: mattergen
 corruption: csp
 
 loss_fn:
   _target_: mattergen.common.loss.MaterialsLoss
-  likelihood_weighting: false
   reduce: sum
   include_pos: True
   include_cell: True

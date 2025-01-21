@@ -1,4 +1,4 @@
-_target_: diffusion.corruption.multi_corruption.MultiCorruption
+_target_: mattergen.diffusion.corruption.multi_corruption.MultiCorruption
 sdes:
   pos: 
     _target_: mattergen.common.diffusion.corruption.NumAtomsVarianceAdjustedWrappedVESDE
