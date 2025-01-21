@@ -206,13 +206,10 @@ class CrystalGenerator:
             "please add it to mattergen.common.data.num_atoms_distribution.NUM_ATOMS_DISTRIBUTIONS."
         )
         if len(self.target_compositions_dict) > 0:
-            assert (
-                self.cfg.lightning_module.diffusion_module.loss_fn.weights.get(
-                    "atomic_numbers", 0.0
-                )
-                == 0.0
-                and "atomic_numbers"
-                not in self.cfg.lightning_module.diffusion_module.corruption.discrete_corruptions
+            assert self.cfg.lightning_module.diffusion_module.loss_fn.weights.get(
+                "atomic_numbers", 0.0
+            ) == 0.0 and "atomic_numbers" not in self.cfg.lightning_module.diffusion_module.corruption.get(
+                "discrete_corruptions", {}
             ), "Input model appears to have been trained for crystal generation (i.e., with atom type denoising), not crystal structure prediction. Please use a model trained for crystal structure prediction instead."
             sampling_cfg = self._load_sampling_config(
                 sampling_config_name=self.sampling_config_name,
