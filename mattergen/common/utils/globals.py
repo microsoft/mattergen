@@ -14,7 +14,7 @@ from omegaconf import OmegaConf
 
 
 @lru_cache
-def get_device():
+def get_device() -> torch.device:
     if torch.cuda.is_available():
         return torch.device("cuda")
     if torch.backends.mps.is_available():
@@ -23,7 +23,7 @@ def get_device():
 
 
 @lru_cache
-def get_pyg_device():
+def get_pyg_device() -> torch.device:
     """
     Some operations of pyg don't work on MPS, so fall back to CPU.
     """
