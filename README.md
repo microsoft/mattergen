@@ -186,8 +186,11 @@ The validation loss (`loss_val`) should reach 0.4 after 360 epochs (about 80k st
 
 To train the MatterGen base model on `alex_mp_20`, use the following command:
 ```bash
-python scripts/run.py data_module=alex_mp_20 ~trainer.logger trainer.accumulate_grad_batches=4 ~trainer.strategy trainer.accelerator=mps
+python scripts/run.py data_module=alex_mp_20 ~trainer.logger trainer.accumulate_grad_batches=4
 ```
+> [!NOTE]
+> For Apple Silicon training, add `~trainer.strategy trainer.accelerator=mps` to the above command.
+
 > [!TIP]
 > Note that a single GPU's memory usually is not enough for the batch size of 512, hence we accumulate gradients over 4 batches. If you still run out of memory, increase this further.
 
@@ -204,10 +207,12 @@ Assume that you have a MatterGen base model at `$MODEL_PATH` (e.g., `checkpoints
 ```bash
 export PROPERTY=dft_mag_density
 export MODEL_PATH=checkpoints/mattergen_base
-python scripts/finetune.py adapter.model_path=$MODEL_PATH data_module=mp_20 +lightning_module/diffusion_module/model/property_embeddings@adapter.adapter.property_embeddings_adapt.$PROPERTY=$PROPERTY ~trainer.logger data_module.properties=["$PROPERTY"] ~trainer.strategy trainer.accelerator=mps
+python scripts/finetune.py adapter.model_path=$MODEL_PATH data_module=mp_20 +lightning_module/diffusion_module/model/property_embeddings@adapter.adapter.property_embeddings_adapt.$PROPERTY=$PROPERTY ~trainer.logger data_module.properties=["$PROPERTY"]
 ```
-
 `dft_mag_density` denotes the target property for fine-tuning. 
+> [!NOTE]
+> For Apple Silicon training, add `~trainer.strategy trainer.accelerator=mps` to the above command.
+
 
 > [!TIP]
 > You can select any property that is available in the dataset. See [`mattergen/conf/data_module/mp_20.yaml`](mattergen/conf/data_module/mp_20.yaml) or [`mattergen/conf/data_module/alex_mp_20.yaml`](mattergen/conf/data_module/alex_mp_20.yaml) for the list of supported properties. You can also add your own custom property data. See [below](#fine-tune-on-your-own-property-data) for instructions.
@@ -225,6 +230,9 @@ python scripts/finetune.py adapter.model_path=$MODEL_PATH data_module=mp_20 +lig
 > Add more properties analogously by adding these overrides:
 > 1. `+lightning_module/diffusion_module/model/property_embeddings@adapter.adapter.property_embeddings_adapt.<my_property>=<my_property>`
 > 2. Add `<my_property>` to the `data_module.properties=["$PROPERTY1", "$PROPERTY2", ..., <my_property>]` override.
+
+> [!NOTE]
+> For Apple Silicon training, add `~trainer.strategy trainer.accelerator=mps` to the above command.
 
 #### Fine-tune on your own property data
 You may also fine-tune MatterGen on your own property data. Essentially what you need is a property value (typically `float`) for a subset of the data you want to train on (e.g., `alex_mp_20`). Proceed as follows:
