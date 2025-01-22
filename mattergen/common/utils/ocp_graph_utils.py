@@ -274,6 +274,7 @@ def get_max_neighbors_mask(
     # Get number of neighbors
     # segment_coo assumes sorted index
     ones = index.new_ones(1).expand_as(index)
+    # required because PyG does not support MPS for the segment_coo operation yet.
     pyg_device = get_pyg_device()
     device_before = ones.device
     num_neighbors = segment_coo(ones.to(pyg_device), index.to(pyg_device), dim_size=num_atoms).to(
