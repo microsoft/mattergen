@@ -176,6 +176,8 @@ You can train the MatterGen base model on `mp_20` using the following command.
 ```bash
 python scripts/run.py data_module=mp_20 ~trainer.logger
 ```
+> [!NOTE]
+> For Apple Silicon training, add `~trainer.strategy trainer.accelerator=mps` to the above command.
 
 The validation loss (`loss_val`) should reach 0.4 after 360 epochs (about 80k steps). The output checkpoints can be found at `outputs/singlerun/${now:%Y-%m-%d}/${now:%H-%M-%S}`. We call this folder `$MODEL_PATH` for future reference. 
 > [!NOTE]
