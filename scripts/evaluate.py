@@ -9,6 +9,7 @@ import fire
 import numpy as np
 
 from mattergen.common.utils.eval_utils import load_structures
+from mattergen.common.utils.globals import get_device
 from mattergen.evaluation.evaluate import evaluate
 from mattergen.evaluation.utils.structure_matcher import (
     DefaultDisorderedStructureMatcher,
@@ -25,7 +26,7 @@ def main(
     potential_load_path: (
         Literal["MatterSim-v1.0.0-1M.pth", "MatterSim-v1.0.0-5M.pth"] | None
     ) = None,
-    device: str = "cuda",
+    device: str = str(get_device()),
 ):
     structures = load_structures(Path(structures_path))
     energies = np.load(energies_path) if energies_path else None

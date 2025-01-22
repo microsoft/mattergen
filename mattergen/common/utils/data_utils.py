@@ -361,19 +361,7 @@ def compute_lattice_polar_decomposition(lattice_matrix: torch.Tensor) -> torch.T
     # lattice_matrix: [batch_size, 3, 3]
     # Computes the (unique) symmetric lattice matrix that is equivalent (up to rotation) to the input lattice.
 
-    if lattice_matrix.device.type == "cuda":
-        # there is an issue running torch.linalg.svd on cuda tensors with driver version 450.*
-
-        try:
-            W, S, V_transp = torch.linalg.svd(lattice_matrix)
-        except torch._C._LinAlgError:
-            # move to cpu and try again
-            W, S, V_transp = torch.linalg.svd(lattice_matrix.to("cpu"))
-            W = W.to(lattice_matrix.device.type)
-            S = S.to(lattice_matrix.device.type)
-            V_transp = V_transp.to(lattice_matrix.device.type)
-    else:
-        W, S, V_transp = torch.linalg.svd(lattice_matrix)
+    W, S, V_transp = torch.linalg.svd(lattice_matrix)
     S_square = torch.diag_embed(S)
     V = V_transp.transpose(1, 2)
     U = W @ V_transp

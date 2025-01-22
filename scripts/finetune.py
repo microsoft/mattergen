@@ -16,7 +16,7 @@ from omegaconf import DictConfig, OmegaConf, open_dict
 from pytorch_lightning.cli import SaveConfigCallback
 
 from mattergen.common.utils.data_classes import MatterGenCheckpointInfo
-from mattergen.common.utils.globals import MODELS_PROJECT_ROOT
+from mattergen.common.utils.globals import MODELS_PROJECT_ROOT, get_device
 from mattergen.diffusion.run import AddConfigCallback, SimpleParser, maybe_instantiate
 
 logger = logging.getLogger(__name__)
@@ -81,7 +81,7 @@ def init_adapter_lightningmodule_from_pretrained(
 
     lightning_module = hydra.utils.instantiate(lightning_module_cfg)
 
-    ckpt: dict = torch.load(ckpt_path)
+    ckpt: dict = torch.load(ckpt_path, map_location=get_device())
     pretrained_dict: OrderedDict = ckpt["state_dict"]
     scratch_dict: OrderedDict = lightning_module.state_dict()
     scratch_dict.update(

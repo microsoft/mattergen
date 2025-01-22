@@ -3,6 +3,7 @@
 
 from pymatgen.core.structure import Structure
 
+from mattergen.common.utils.globals import get_device
 from mattergen.evaluation.metrics.evaluator import MetricsEvaluator
 from mattergen.evaluation.reference.reference_dataset import ReferenceDataset
 from mattergen.evaluation.utils.relaxation import relax_structures
@@ -18,11 +19,12 @@ def evaluate(
     relax: bool = True,
     energies: list[float] | None = None,
     reference: ReferenceDataset | None = None,
-    structure_matcher: OrderedStructureMatcher
-        | DisorderedStructureMatcher = DefaultDisorderedStructureMatcher(),
+    structure_matcher: (
+        OrderedStructureMatcher | DisorderedStructureMatcher
+    ) = DefaultDisorderedStructureMatcher(),
     save_as: str | None = None,
     potential_load_path: str | None = None,
-    device: str = "cuda",
+    device: str = str(get_device()),
 ) -> dict[str, float | int]:
     """Evaluate the structures against a reference dataset.
 
@@ -41,18 +43,20 @@ def evaluate(
     if relax and energies is not None:
         raise ValueError("Cannot accept energies if relax is True.")
     if relax:
-        relaxed_structures, energies = relax_structures(structures, device=device, load_path=potential_load_path)
+        relaxed_structures, energies = relax_structures(
+            structures, device=device, load_path=potential_load_path
+        )
     else:
         relaxed_structures = structures
     evaluator = MetricsEvaluator.from_structures_and_energies(
-        structures=relaxed_structures, 
+        structures=relaxed_structures,
         energies=energies,
         original_structures=structures,
         reference=reference,
-        structure_matcher=structure_matcher
+        structure_matcher=structure_matcher,
     )
     return evaluator.compute_metrics(
-        metrics = evaluator.available_metrics,
-        save_as = save_as,
-        pretty_print = True,
+        metrics=evaluator.available_metrics,
+        save_as=save_as,
+        pretty_print=True,
     )

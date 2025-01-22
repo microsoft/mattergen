@@ -20,6 +20,7 @@ from mattergen.common.globals import (
     GENERATED_CRYSTALS_ZIP_FILE_NAME,
 )
 from mattergen.common.utils.data_classes import MatterGenCheckpointInfo
+from mattergen.common.utils.globals import get_device
 from mattergen.diffusion.lightning_module import DiffusionLightningModule
 
 # logging
@@ -54,7 +55,7 @@ def load_model_diffusion(
     try:
         model, incompatible_keys = DiffusionLightningModule.load_from_checkpoint_and_config(
             ckpt,
-            map_location=torch.device("cpu") if not torch.cuda.is_available() else None,
+            map_location=get_device(),
             config=cfg.lightning_module,
             strict=args.strict_checkpoint_loading,
         )

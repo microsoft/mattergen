@@ -29,7 +29,7 @@ from mattergen.common.utils.eval_utils import (
     make_structure,
     save_structures,
 )
-from mattergen.common.utils.globals import DEFAULT_SAMPLING_CONFIG_PATH
+from mattergen.common.utils.globals import DEFAULT_SAMPLING_CONFIG_PATH, get_device
 from mattergen.diffusion.lightning_module import DiffusionLightningModule
 from mattergen.diffusion.sampling.pc_sampler import PredictorCorrector
 
@@ -332,7 +332,7 @@ class CrystalGenerator:
         if self._model is not None:
             return
         model = load_model_diffusion(self.checkpoint_info)
-        model = model.to("cuda" if torch.cuda.is_available() else "cpu")
+        model = model.to(get_device())
         self._model = model
         self._cfg = self.checkpoint_info.config
 

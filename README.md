@@ -14,6 +14,9 @@
 
 MatterGen is a generative model for inorganic materials design across the periodic table that can be fine-tuned to steer the generation towards a wide range of property constraints.
 
+> [!WARNING]
+> This branch adds **experimental** support to run MatterGen on Apple Silicon. Use at your own risk.
+
 ## Table of Contents
 - [Installation](#installation)
 - [Get started with a pre-trained model](#get-started-with-a-pre-trained-model)
@@ -74,6 +77,7 @@ To sample from the pre-trained base model, run the following command.
 ```bash
 export MODEL_PATH=checkpoints/mattergen_base  # Or provide your own model
 export RESULTS_PATH=results/  # Samples will be written to this directory
+export PYTORCH_ENABLE_MPS_FALLBACK=1
 
 # generate batch_size * num_batches samples
 python scripts/generate.py $RESULTS_PATH $MODEL_PATH --batch_size=16 --num_batches 1
@@ -89,6 +93,7 @@ With a fine-tuned model, you can generate materials conditioned on a target prop
 For example, to sample from the model trained on magnetic density, you can run the following command.
 ```bash
 export MODEL_NAME=dft_mag_density
+export PYTORCH_ENABLE_MPS_FALLBACK=1
 export MODEL_PATH="checkpoints/$MODEL_NAME"  # Or provide your own model
 export RESULTS_PATH="results/$MODEL_NAME/"  # Samples will be written to this directory, e.g., `results/dft_mag_density`
 
@@ -102,6 +107,7 @@ python scripts/generate.py $RESULTS_PATH $MODEL_PATH --batch_size=16 --checkpoin
 You can also generate materials conditioned on more than one property. For instance, you can use the pre-trained model located at `checkpoints/chemical_system_energy_above_hull` to generate conditioned on chemical system and energy above the hull, or the model at `checkpoints/dft_mag_density_hhi_score` for joint conditioning on [HHI score](https://en.wikipedia.org/wiki/Herfindahl%E2%80%93Hirschman_index) and magnetic density.
 Adapt the following command to your specific needs:
 ```bash
+export PYTORCH_ENABLE_MPS_FALLBACK=1
 export MODEL_NAME=chemical_system_energy_above_hull
 export MODEL_PATH="checkpoints/$MODEL_NAME"  # Or provide your own model
 export RESULTS_PATH="results/$MODEL_NAME/"  # Samples will be written to this directory, e.g., `results/dft_mag_density`
@@ -154,7 +160,8 @@ This will take some time (~1h). You will get preprocessed data files in `dataset
 You can train the MatterGen base model on `mp_20` using the following command.
 
 ```bash
-python scripts/run.py data_module=mp_20 ~trainer.logger
+export PYTORCH_ENABLE_MPS_FALLBACK=1
+python scripts/run.py data_module=mp_20 ~trainer.logger ~trainer.strategy trainer.accelerator=mps
 ```
 
 The validation loss (`loss_val`) should reach 0.4 after 360 epochs (about 80k steps). The output checkpoints can be found at `outputs/singlerun/${now:%Y-%m-%d}/${now:%H-%M-%S}`. We call this folder `$MODEL_PATH` for future reference. 
@@ -166,7 +173,8 @@ The validation loss (`loss_val`) should reach 0.4 after 360 epochs (about 80k st
 
 To train the MatterGen base model on `alex_mp_20`, use the following command:
 ```bash
-python scripts/run.py data_module=alex_mp_20 ~trainer.logger trainer.accumulate_grad_batches=4
+export PYTORCH_ENABLE_MPS_FALLBACK=1
+python scripts/run.py data_module=alex_mp_20 ~trainer.logger trainer.accumulate_grad_batches=4 ~trainer.strategy trainer.accelerator=mps
 ```
 > [!TIP]
 > Note that a single GPU's memory usually is not enough for the batch size of 512, hence we accumulate gradients over 4 batches. If you still run out of memory, increase this further.
@@ -184,7 +192,8 @@ Assume that you have a MatterGen base model at `$MODEL_PATH` (e.g., `checkpoints
 ```bash
 export PROPERTY=dft_mag_density
 export MODEL_PATH=checkpoints/mattergen_base
-python scripts/finetune.py adapter.model_path=$MODEL_PATH data_module=mp_20 +lightning_module/diffusion_module/model/property_embeddings@adapter.adapter.property_embeddings_adapt.$PROPERTY=$PROPERTY ~trainer.logger data_module.properties=["$PROPERTY"]
+export PYTORCH_ENABLE_MPS_FALLBACK=1
+python scripts/finetune.py adapter.model_path=$MODEL_PATH data_module=mp_20 +lightning_module/diffusion_module/model/property_embeddings@adapter.adapter.property_embeddings_adapt.$PROPERTY=$PROPERTY ~trainer.logger data_module.properties=["$PROPERTY"] ~trainer.strategy trainer.accelerator=mps
 ```
 
 `dft_mag_density` denotes the target property for fine-tuning. 

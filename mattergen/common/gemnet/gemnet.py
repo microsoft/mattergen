@@ -34,7 +34,7 @@ from mattergen.common.utils.data_utils import (
     lattice_params_to_matrix_torch,
     radius_graph_pbc,
 )
-from mattergen.common.utils.globals import MODELS_PROJECT_ROOT
+from mattergen.common.utils.globals import MODELS_PROJECT_ROOT, get_device, get_pyg_device
 from mattergen.common.utils.lattice_score import edge_score_to_lattice_score_frac_symmetric
 
 
@@ -381,17 +381,19 @@ class GemNetT(torch.nn.Module):
 
         value = torch.arange(idx_s.size(0), device=idx_s.device, dtype=idx_s.dtype)
         # Possibly contains multiple copies of the same edge (for periodic interactions)
+        pyg_device = get_pyg_device()
+        torch_device = get_device()
         adj = SparseTensor(
-            row=idx_t,
-            col=idx_s,
-            value=value,
-            sparse_sizes=(num_atoms, num_atoms),
+            row=idx_t.to(pyg_device),
+            col=idx_s.to(pyg_device),
+            value=value.to(pyg_device),
+            sparse_sizes=(num_atoms.to(pyg_device), num_atoms.to(pyg_device)),
         )
-        adj_edges = adj[idx_t]
+        adj_edges = adj[idx_t.to(pyg_device)].to(torch_device)
 
         # Edge indices (b->a, c->a) for triplets.
-        id3_ba = adj_edges.storage.value()
-        id3_ca = adj_edges.storage.row()
+        id3_ba = adj_edges.storage.value().to(torch_device)
+        id3_ca = adj_edges.storage.row().to(torch_device)
 
         # Remove self-loop triplets
         # Compare edge indices, not atom indices to correctly handle periodic interactions
