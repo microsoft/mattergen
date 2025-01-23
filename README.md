@@ -65,11 +65,10 @@ export PYTORCH_ENABLE_MPS_FALLBACK=1  # required to run MatterGen on Apple Silic
 
 
 ### Install Git LFS
-If Git LFS was not installed before you cloned this repo, you can install it and download the missing files via:
+If Git LFS was not installed before you cloned this repo, you can install it via:
 ```bash
 sudo apt install git-lfs
 git lfs install
-git lfs pull  # this downloads the missing files
 ```
 
 ## Get started with a pre-trained model
@@ -94,6 +93,7 @@ To sample from the pre-trained base model, run the following command.
 ```bash
 export MODEL_PATH=checkpoints/mattergen_base  # Or provide your own model
 export RESULTS_PATH=results/  # Samples will be written to this directory
+git lfs pull -I $MODEL_PATH --exclude=""  # first download the checkpoint file from Git LFS
 
 # generate batch_size * num_batches samples
 python scripts/generate.py $RESULTS_PATH $MODEL_PATH --batch_size=16 --num_batches 1
@@ -111,6 +111,7 @@ For example, to sample from the model trained on magnetic density, you can run t
 export MODEL_NAME=dft_mag_density
 export MODEL_PATH="checkpoints/$MODEL_NAME"  # Or provide your own model
 export RESULTS_PATH="results/$MODEL_NAME/"  # Samples will be written to this directory, e.g., `results/dft_mag_density`
+git lfs pull -I $MODEL_PATH --exclude=""  # first download the checkpoint file from Git LFS
 
 # Generate conditional samples with a target magnetic density of 0.15
 python scripts/generate.py $RESULTS_PATH $MODEL_PATH --batch_size=16 --checkpoint_epoch=last --properties_to_condition_on="{'dft_mag_density': 0.15}" --diffusion_guidance_factor=2.0
@@ -125,6 +126,7 @@ Adapt the following command to your specific needs:
 export MODEL_NAME=chemical_system_energy_above_hull
 export MODEL_PATH="checkpoints/$MODEL_NAME"  # Or provide your own model
 export RESULTS_PATH="results/$MODEL_NAME/"  # Samples will be written to this directory, e.g., `results/dft_mag_density`
+git lfs pull -I $MODEL_PATH --exclude=""  # first download the checkpoint file from Git LFS
 python scripts/generate.py $RESULTS_PATH $MODEL_PATH --batch_size=16 --checkpoint_epoch=last --properties_to_condition_on="{'energy_above_hull': 0.05, 'chemical_system': 'Li-O'}" --diffusion_guidance_factor=2.0
 ```
 ## Evaluation
@@ -143,6 +145,7 @@ This script will write `metrics.json` containing the metric results to `$RESULTS
 
 If, instead, you have relaxed the structures and obtained the relaxed total energies via another mean (e.g., DFT), you can evaluate the metrics via:
 ```bash
+git lfs pull -I data-release/alex-mp-20/reference_MP2020correction.gz --exclude=""
 python scripts/evaluate.py --structures_path=$RESULTS_PATH --energies_path='energies.npy' --relax=False --structure_matcher='disordered' --save_as='metrics'
 ```
 This script will try to read structures from disk in the following precedence order:
@@ -158,6 +161,8 @@ Before we can train MatterGen from scratch, we have to unpack and preprocess the
 
 You can run the following command for `mp_20`:
 ```bash
+# Download file from LFS
+git lfs pull -I data-release/mp-20/ --exclude=""
 unzip data-release/mp-20/mp_20.zip -d datasets
 python scripts/csv_to_dataset.py --csv-folder datasets/mp_20/ --dataset-name mp_20 --cache-folder datasets/cache
 ```
@@ -165,6 +170,8 @@ You will get preprocessed data files in `datasets/cache/mp_20`.
 
 To preprocess our larger `alex_mp_20` dataset, run:
 ```bash
+# Download file from LFS
+git lfs pull -I data-release/alex-mp/alex_mp_20.zip --exclude=""
 unzip data-release/alex-mp/alex_mp_20.zip -d datasets
 python scripts/csv_to_dataset.py --csv-folder datasets/alex_mp_20/ --dataset-name alex_mp_20 --cache-folder datasets/cache
 ```
@@ -209,6 +216,7 @@ Assume that you have a MatterGen base model at `$MODEL_PATH` (e.g., `checkpoints
 ```bash
 export PROPERTY=dft_mag_density
 export MODEL_PATH=checkpoints/mattergen_base
+git lfs pull -I $MODEL_PATH --exclude=""  # first download the checkpoint file from Git LFS
 python scripts/finetune.py adapter.model_path=$MODEL_PATH data_module=mp_20 +lightning_module/diffusion_module/model/property_embeddings@adapter.adapter.property_embeddings_adapt.$PROPERTY=$PROPERTY ~trainer.logger data_module.properties=["$PROPERTY"]
 ```
 `dft_mag_density` denotes the target property for fine-tuning. 
@@ -226,6 +234,7 @@ You can also fine-tune MatterGen on multiple properties. For instance, to fine-t
 export PROPERTY1=dft_mag_density
 export PROPERTY2=dft_band_gap 
 export MODEL_PATH=checkpoints/mattergen_base
+git lfs pull -I $MODEL_PATH --exclude=""  # first download the checkpoint file from Git LFS
 python scripts/finetune.py adapter.model_path=$MODEL_PATH data_module=mp_20 +lightning_module/diffusion_module/model/property_embeddings@adapter.adapter.property_embeddings_adapt.$PROPERTY1=$PROPERTY1 +lightning_module/diffusion_module/model/property_embeddings@adapter.adapter.property_embeddings_adapt.$PROPERTY2=$PROPERTY2 ~trainer.logger data_module.properties=["$PROPERTY1","$PROPERTY2"]
 ```
 > [!TIP]
