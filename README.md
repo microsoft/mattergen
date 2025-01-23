@@ -133,6 +133,7 @@ python scripts/generate.py $RESULTS_PATH $MODEL_PATH --batch_size=16 --checkpoin
 
 Once you have generated a list of structures contained in `$RESULTS_PATH` (either using MatterGen or another method), you can relax the structures using the default MatterSim machine learning force field (see [repository](https://github.com/microsoft/mattersim)) and compute novelty, uniqueness, stability (using energy estimated by MatterSim), and other metrics via the following command:
 ```bash
+git lfs pull -I data-release/alex-mp/reference_MP2020correction.gz --exclude=""  # first download the reference dataset from Git LFS
 python scripts/evaluate.py --structures_path=$RESULTS_PATH --relax=True --structure_matcher='disordered' --save_as="$RESULTS_PATH/metrics.json"
 ```
 This script will write `metrics.json` containing the metric results to `$RESULTS_PATH` and will print it to your console.
@@ -145,7 +146,7 @@ This script will write `metrics.json` containing the metric results to `$RESULTS
 
 If, instead, you have relaxed the structures and obtained the relaxed total energies via another mean (e.g., DFT), you can evaluate the metrics via:
 ```bash
-git lfs pull -I data-release/alex-mp-20/reference_MP2020correction.gz --exclude=""
+git lfs pull -I data-release/alex-mp/reference_MP2020correction.gz --exclude=""  # first download the reference dataset from Git LFS
 python scripts/evaluate.py --structures_path=$RESULTS_PATH --energies_path='energies.npy' --relax=False --structure_matcher='disordered' --save_as='metrics'
 ```
 This script will try to read structures from disk in the following precedence order:
