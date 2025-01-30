@@ -205,7 +205,7 @@ class CrystalGenerator:
             f"but got {self.num_atoms_distribution}. To add your own distribution, "
             "please add it to mattergen.common.data.num_atoms_distribution.NUM_ATOMS_DISTRIBUTIONS."
         )
-        if len(self.target_compositions_dict) > 0:
+        if self.target_compositions_dict:
             assert self.cfg.lightning_module.diffusion_module.loss_fn.weights.get(
                 "atomic_numbers", 0.0
             ) == 0.0 and "atomic_numbers" not in self.cfg.lightning_module.diffusion_module.corruption.get(

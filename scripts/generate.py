@@ -8,13 +8,17 @@ from typing import Literal
 import fire
 
 from mattergen.common.data.types import TargetProperty
-from mattergen.common.utils.eval_utils import MatterGenCheckpointInfo
+from mattergen.common.utils.data_classes import (
+    PRETRAINED_MODEL_NAME,
+    MatterGenCheckpointInfo,
+)
 from mattergen.generator import CrystalGenerator
 
 
 def main(
     output_path: str,
-    model_path: str,
+    pretrained_name: PRETRAINED_MODEL_NAME | None = None,
+    model_path: str | None = None,
     batch_size: int = 64,
     num_batches: int = 1,
     config_overrides: list[str] | None = None,
@@ -47,6 +51,13 @@ def main(
 
     NOTE: When specifying dictionary values via the CLI, make sure there is no whitespace between the key and value, e.g., `--properties_to_condition_on={key1:value1}`.
     """
+    assert (
+        pretrained_name is not None or model_path is not None
+    ), "Either pretrained_name or model_path must be provided."
+    assert (
+        pretrained_name is None or model_path is None
+    ), "Only one of pretrained_name or model_path can be provided."
+
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
@@ -55,12 +66,17 @@ def main(
     properties_to_condition_on = properties_to_condition_on or {}
     target_compositions = target_compositions or []
 
-    checkpoint_info = MatterGenCheckpointInfo(
-        model_path=Path(model_path).resolve(),
-        load_epoch=checkpoint_epoch,
-        config_overrides=config_overrides,
-        strict_checkpoint_loading=strict_checkpoint_loading,
-    )
+    if pretrained_name is not None:
+        checkpoint_info = MatterGenCheckpointInfo.from_hf_hub(
+            pretrained_name, config_overrides=config_overrides
+        )
+    else:
+        checkpoint_info = MatterGenCheckpointInfo(
+            model_path=Path(model_path).resolve(),
+            load_epoch=checkpoint_epoch,
+            config_overrides=config_overrides,
+            strict_checkpoint_loading=strict_checkpoint_loading,
+        )
     _sampling_config_path = Path(sampling_config_path) if sampling_config_path is not None else None
     generator = CrystalGenerator(
         checkpoint_info=checkpoint_info,
@@ -79,6 +95,10 @@ def main(
     generator.generate(output_dir=Path(output_path))
 
 
-if __name__ == "__main__":
+def _main():
     # use fire instead of argparse to allow for the specification of dictionary values via the CLI
     fire.Fire(main)
+
+
+if __name__ == "__main__":
+    _main()

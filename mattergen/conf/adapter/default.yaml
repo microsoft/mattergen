@@ -1,4 +1,5 @@
-model_path: ${oc.env:MAP_INPUT_DIR}
+pretrained_name: mattergen_base
+model_path: null
 load_epoch: last
 full_finetuning: true
 

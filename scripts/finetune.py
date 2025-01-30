@@ -25,15 +25,24 @@ logger = logging.getLogger(__name__)
 def init_adapter_lightningmodule_from_pretrained(
     adapter_cfg: DictConfig, lightning_module_cfg: DictConfig
 ) -> Tuple[pl.LightningModule, DictConfig]:
-    assert adapter_cfg.model_path is not None, "model_path must be provided."
 
-    model_path = Path(hydra.utils.to_absolute_path(adapter_cfg.model_path))
-    ckpt_info = MatterGenCheckpointInfo(model_path, adapter_cfg.load_epoch)
+    if adapter_cfg.model_path is not None:
+        if adapter_cfg.pretrained_name is not None:
+            logger.warning(
+                "pretrained_name is provided, but will be ignored since model_path is also provided."
+            )
+        model_path = Path(hydra.utils.to_absolute_path(adapter_cfg.model_path))
+        ckpt_info = MatterGenCheckpointInfo(model_path, adapter_cfg.load_epoch)
+    elif adapter_cfg.pretrained_name is not None:
+        assert (
+            adapter_cfg.model_path is None
+        ), "model_path must be None when pretrained_name is provided."
+        ckpt_info = MatterGenCheckpointInfo.from_hf_hub(adapter_cfg.pretrained_name)
 
     ckpt_path = ckpt_info.checkpoint_path
 
-    version_root_path = Path(ckpt_path).relative_to(model_path).parents[1]
-    config_path = model_path / version_root_path
+    version_root_path = Path(ckpt_path).relative_to(ckpt_info.model_path).parents[1]
+    config_path = ckpt_info.model_path / version_root_path
 
     # load pretrained model config.
     if (config_path / "config.yaml").exists():

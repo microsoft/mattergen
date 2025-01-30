@@ -34,6 +34,7 @@ dependencies = [
 "contextlib2",
 "emmet-core>=0.84.2",  # keep up-to-date together with pymatgen, atomate2
 "fire", # see https://github.com/google/python-fire
+"huggingface-hub",
 "hydra-core==1.3.1",
 "hydra-joblib-launcher==1.1.5",
 "jupyterlab>=4.2.5",
@@ -79,3 +80,11 @@ torch_sparse = { url = "https://data.pyg.org/whl/torch-2.2.0%2Bcu118/torch_spars
 name = "pytorch"
 url = "https://download.pytorch.org/whl/cu118"
 explicit = true
+
+
+[project.scripts]
+mattergen-generate = "scripts.generate:_main"
+mattergen-train = "scripts.run:mattergen_main"
+mattergen-finetune = "scripts.finetune:mattergen_finetune"
+mattergen-evaluate = "scripts.evaluate:_main"
+csv-to-dataset = "scripts.csv_to_dataset:main"

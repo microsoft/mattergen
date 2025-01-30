@@ -47,5 +47,9 @@ def main(
     print(json.dumps(metrics, indent=2))
 
 
-if __name__ == "__main__":
+def _main():
     fire.Fire(main)
+
+
+if __name__ == "__main__":
+    _main()

@@ -9,8 +9,20 @@ from pathlib import Path
 from typing import Any, Literal
 
 import numpy as np
+from huggingface_hub import hf_hub_download
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
+
+PRETRAINED_MODEL_NAME = Literal[
+    "mattergen_base",
+    "chemical_system",
+    "space_group",
+    "dft_mag_density",
+    "dft_band_gap",
+    "ml_bulk_modulus",
+    "dft_mag_density_hhi_score",
+    "chemical_system_energy_above_hull",
+]
 
 
 def find_local_files(local_path: str, glob: str = "*", relative: bool = False) -> list[str]:
@@ -40,6 +52,29 @@ class MatterGenCheckpointInfo:
     config_overrides: list[str] = field(default_factory=list)
     split: str = "val"
     strict_checkpoint_loading: bool = True
+
+    @classmethod
+    def from_hf_hub(
+        cls,
+        model_name: PRETRAINED_MODEL_NAME,
+        repository_name: str = "microsoft/mattergen",
+        config_overrides: list[str] = None,
+    ):
+        """
+        Instantiate a MatterGenCheckpointInfo object from a model hosted on the Hugging Face Hub.
+
+        """
+        hf_hub_download(
+            repo_id=repository_name, filename=f"checkpoints/{model_name}/checkpoints/last.ckpt"
+        )
+        config_path = hf_hub_download(
+            repo_id=repository_name, filename=f"checkpoints/{model_name}/config.yaml"
+        )
+        return cls(
+            model_path=Path(config_path).parent,
+            config_overrides=config_overrides or [],
+            load_epoch="last",
+        )
 
     def as_dict(self) -> dict[str, Any]:
         d = asdict(self)
