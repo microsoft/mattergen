@@ -51,17 +51,6 @@ If this prints some version like `git-lfs/3.0.2 (GitHub; linux amd64; go 1.18.1)
 > Running MatterGen on Apple Silicon is **experimental**. Use at your own risk.  
 > Further, you need to run `export PYTORCH_ENABLE_MPS_FALLBACK=1` before any training or generation run.
 
-To install the environment for Apple Silicon, run these commands:
-```bash
-cp pyproject.toml pyproject.linux.toml
-mv pyproject_apple_silicon.toml pyproject.toml
-pip install uv
-uv venv .venv --python 3.10 
-source .venv/bin/activate
-uv pip install -e .
-export PYTORCH_ENABLE_MPS_FALLBACK=1  # required to run MatterGen on Apple Silicon
-```
-
 
 
 ### Install Git LFS

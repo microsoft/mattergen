@@ -53,9 +53,12 @@ dependencies = [
 "setuptools",
 "SMACT",
 "sympy>=1.11.1",
-"torch==2.2.1+cu118", 
-"torchvision==0.17.1+cu118",
-"torchaudio==2.2.1+cu118",
+"torch==2.2.1+cu118; sys_platform == 'linux'", 
+"torchvision==0.17.1+cu118; sys_platform == 'linux'",
+"torchaudio==2.2.1+cu118; sys_platform == 'linux'",
+"torch==2.4.1; sys_platform == 'darwin'",
+"torchvision==0.19.1; sys_platform == 'darwin'",
+"torchaudio==2.4.1; sys_platform == 'darwin'",
 "torch_cluster",
 "torch_geometric>=2.5",
 "torch_scatter",
@@ -68,16 +71,30 @@ dependencies = [
 include = ["mattergen*"]
 
 [tool.uv.sources]
-torch = { index = "pytorch" }
-torchvision = { index = "pytorch" }
-torchaudio = { index = "pytorch" }
-pyg-lib = { url = "https://data.pyg.org/whl/torch-2.2.0%2Bcu118/pyg_lib-0.4.0%2Bpt22cu118-cp310-cp310-linux_x86_64.whl" }
-torch_cluster = { url = "https://data.pyg.org/whl/torch-2.2.0%2Bcu118/torch_cluster-1.6.3%2Bpt22cu118-cp310-cp310-linux_x86_64.whl" }
-torch_scatter = { url = "https://data.pyg.org/whl/torch-2.2.0%2Bcu118/torch_scatter-2.1.2%2Bpt22cu118-cp310-cp310-linux_x86_64.whl" }
-torch_sparse = { url = "https://data.pyg.org/whl/torch-2.2.0%2Bcu118/torch_sparse-0.6.18%2Bpt22cu118-cp310-cp310-linux_x86_64.whl" }
+torch = { index = "pytorch_linux",  marker = "sys_platform == 'linux'" }
+torchvision = { index = "pytorch_linux",  marker = "sys_platform == 'linux'" }
+torchaudio = { index = "pytorch_linux",  marker = "sys_platform == 'linux'" }
+pyg-lib = [
+  { url = "https://data.pyg.org/whl/torch-2.2.0%2Bcu118/pyg_lib-0.4.0%2Bpt22cu118-cp310-cp310-linux_x86_64.whl",  marker = "sys_platform == 'linux'" },
+  { url = "https://data.pyg.org/whl/torch-2.4.0%2Bcpu/pyg_lib-0.4.0%2Bpt24-cp310-cp310-macosx_14_0_universal2.whl",  marker = "sys_platform == 'darwin'" }
+]
+torch_cluster = [
+  { url = "https://data.pyg.org/whl/torch-2.2.0%2Bcu118/torch_cluster-1.6.3%2Bpt22cu118-cp310-cp310-linux_x86_64.whl",  marker = "sys_platform == 'linux'" },
+  { url = "https://data.pyg.org/whl/torch-2.4.0%2Bcpu/torch_cluster-1.6.3-cp310-cp310-macosx_10_9_universal2.whl",  marker = "sys_platform == 'darwin'"  }
+]
+
+torch_scatter = [
+  { url = "https://data.pyg.org/whl/torch-2.2.0%2Bcu118/torch_scatter-2.1.2%2Bpt22cu118-cp310-cp310-linux_x86_64.whl",  marker = "sys_platform == 'linux'" },
+  { url = "https://data.pyg.org/whl/torch-2.4.0%2Bcpu/torch_scatter-2.1.2-cp310-cp310-macosx_10_9_universal2.whl",  marker = "sys_platform == 'darwin'"  }
+]
+
+torch_sparse = [
+  { url = "https://data.pyg.org/whl/torch-2.2.0%2Bcu118/torch_sparse-0.6.18%2Bpt22cu118-cp310-cp310-linux_x86_64.whl",  marker = "sys_platform == 'linux'" },
+  { url = "https://data.pyg.org/whl/torch-2.4.0%2Bcpu/torch_sparse-0.6.18-cp310-cp310-macosx_11_0_universal2.whl",  marker = "sys_platform == 'darwin'"  }
+]
 
 [[tool.uv.index]]
-name = "pytorch"
+name = "pytorch_linux"
 url = "https://download.pytorch.org/whl/cu118"
 explicit = true
 
