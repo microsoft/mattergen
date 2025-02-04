@@ -100,8 +100,8 @@ explicit = true
 
 
 [project.scripts]
-mattergen-generate = "scripts.generate:_main"
-mattergen-train = "scripts.run:mattergen_main"
-mattergen-finetune = "scripts.finetune:mattergen_finetune"
-mattergen-evaluate = "scripts.evaluate:_main"
-csv-to-dataset = "scripts.csv_to_dataset:main"
+mattergen-generate = "mattergen.scripts.generate:_main"
+mattergen-train = "mattergen.scripts.run:mattergen_main"
+mattergen-finetune = "mattergen.scripts.finetune:mattergen_finetune"
+mattergen-evaluate = "mattergen.scripts.evaluate:_main"
+csv-to-dataset = "mattergen.scripts.csv_to_dataset:main"
