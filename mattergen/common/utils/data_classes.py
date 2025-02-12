@@ -64,11 +64,22 @@ class MatterGenCheckpointInfo:
         Instantiate a MatterGenCheckpointInfo object from a model hosted on the Hugging Face Hub.
 
         """
+        
+        # change endpoing to hf-mirror.com
+        hf_mirror_url = "https://hf-mirror.com"
+
+        # add endpoint to use the mirror
         hf_hub_download(
-            repo_id=repository_name, filename=f"checkpoints/{model_name}/checkpoints/last.ckpt"
+            repo_id=repository_name,
+            filename=f"checkpoints/{model_name}/checkpoints/last.ckpt",
+            endpoint=hf_mirror_url
         )
+
+        # add endpoint to use the mirror
         config_path = hf_hub_download(
-            repo_id=repository_name, filename=f"checkpoints/{model_name}/config.yaml"
+            repo_id=repository_name,
+            filename=f"checkpoints/{model_name}/config.yaml",
+            endpoint=hf_mirror_url
         )
         return cls(
             model_path=Path(config_path).parent,
