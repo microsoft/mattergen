@@ -65,7 +65,7 @@ class MatterGenCheckpointInfo:
 
         """
         
-        # change endpoing to hf-mirror.com
+        # change endpoint to hf-mirror.com
         hf_mirror_url = "https://hf-mirror.com"
 
         # add endpoint to use the mirror
