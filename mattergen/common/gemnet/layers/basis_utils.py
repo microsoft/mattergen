@@ -189,7 +189,7 @@ def real_sph_harm(
     L_maxdegree: int, use_theta: bool, use_phi: bool = True, zero_m_only: bool = True
 ) -> List[List[Any]]:
     """
-    Computes formula strings of the the real part of the spherical harmonics up to degree L (excluded).
+    Computes formula strings of the real part of the spherical harmonics up to degree L (excluded).
     Variables are either spherical coordinates phi and theta (or cartesian coordinates x,y,z) on the UNIT SPHERE.
 
     Parameters
@@ -209,7 +209,7 @@ def real_sph_harm(
     Returns
     -------
         Y_lm_real: list
-            Computes formula strings of the the real part of the spherical harmonics up
+            Computes formula strings of the real part of the spherical harmonics up
             to degree L (where degree L is not excluded).
             In total L^2 many sph harm exist up to degree L (excluded). However, if zero_m_only only is True then
             the total count is reduced to be only L many.
