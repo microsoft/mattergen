@@ -153,6 +153,7 @@ def load_structures(input_path: Path) -> Sequence[Structure]:
 
 def extract_structures_from_folder(dirname: str) -> Sequence[Structure]:
     structures = []
+    breakpoint()
     for filename in os.listdir(dirname):
         if filename.endswith(".cif"):
             try:
