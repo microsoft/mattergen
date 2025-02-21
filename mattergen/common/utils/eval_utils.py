@@ -117,7 +117,7 @@ def save_structures(output_path: Path, structures: Sequence[Structure]) -> None:
         with ZipFile(output_path / GENERATED_CRYSTALS_ZIP_FILE_NAME, "w") as zip_obj:
             for ix, ase_atom in enumerate(ase_atoms):
                 ase.io.write(f"/tmp/gen_{ix}.cif", ase_atom, format="cif")
-                zip_obj.write(f"/tmp/gen_{ix}.cif")
+                zip_obj.write(f"/tmp/gen_{ix}.cif", arcname=f"gen_{ix}.cif")
     except IOError as e:
         print(f"Got error {e} writing the generated structures to disk.")
 

@@ -40,18 +40,12 @@ source .venv/bin/activate
 uv pip install -e .
 ```
 
-Note that our datasets and model checkpoints are provided inside this repo via [Git Large File Storage (LFS)](https://git-lfs.com/). To find out whether LFS is installed on your machine, run
+Note that our datasets and model checkpoints are provided inside this repo via [Git Large File Storage (LFS)](https://git-lfs.com/).
+To find out whether LFS is installed on your machine, run
 ```bash
 git lfs --version
 ```
 If this prints some version like `git-lfs/3.0.2 (GitHub; linux amd64; go 1.18.1)`, you can skip the following step.
-
-### Apple Silicon
-> [!WARNING]
-> Running MatterGen on Apple Silicon is **experimental**. Use at your own risk.  
-> Further, you need to run `export PYTORCH_ENABLE_MPS_FALLBACK=1` before any training or generation run.
-
-
 
 ### Install Git LFS
 If Git LFS was not installed before you cloned this repo, you can install it via:
@@ -59,6 +53,11 @@ If Git LFS was not installed before you cloned this repo, you can install it via
 sudo apt install git-lfs
 git lfs install
 ```
+
+### Apple Silicon
+> [!WARNING]
+> Running MatterGen on Apple Silicon is **experimental**. Use at your own risk.  
+> Further, you need to run `export PYTORCH_ENABLE_MPS_FALLBACK=1` before any training or generation run.
 
 ## Get started with a pre-trained model
 We provide checkpoints of an unconditional base version of MatterGen as well as fine-tuned models for these properties:
@@ -71,7 +70,10 @@ We provide checkpoints of an unconditional base version of MatterGen as well as 
 * `dft_mag_density_hhi_score`: fine-tuned model jointly conditioned on magnetic density from DFT and HHI score
 * `chemical_system_energy_above_hull`: fine-tuned model jointly conditioned on chemical system and energy above hull from DFT
 
-The checkpoints are located at `checkpoints/<model_name>` and are also available on [Hugging Face](https://huggingface.co/microsoft/mattergen). 
+The checkpoints are located at `checkpoints/<model_name>` and are also available on [Hugging Face](https://huggingface.co/microsoft/mattergen). By default, they are downloaded from Huggingface when requested. You can also manually download them from Git LFS via 
+```bash
+git lfs pull -I checkpoints/<model_name> --exclude="" 
+```
 
 > [!NOTE]
 > The checkpoints provided were re-trained using this repository, i.e., are not identical to the ones used in the paper. Hence, results may slightly deviate from those in the publication. 
