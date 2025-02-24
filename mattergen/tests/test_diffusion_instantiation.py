@@ -10,7 +10,7 @@ import hydra
 import pytest
 
 from mattergen.common.utils.globals import MODELS_PROJECT_ROOT
-from scripts.run import mattergen_main
+from mattergen.scripts.run import mattergen_main
 
 CONFIG_DIR = os.path.join(MODELS_PROJECT_ROOT, "conf")
 

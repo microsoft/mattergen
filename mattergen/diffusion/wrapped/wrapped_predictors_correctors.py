@@ -56,6 +56,7 @@ class WrappedCorrectorMixin:
         batch_idx: torch.LongTensor,
         score: torch.Tensor,
         t: torch.Tensor,
+        dt: torch.Tensor,
     ) -> SampleAndMean:
         # mypy
         assert isinstance(self, pc.LangevinCorrector)
@@ -66,7 +67,7 @@ class WrappedCorrectorMixin:
             raise IncompatibleSampler(
                 f"{self.__class__.__name__} is not compatible with {self.corruption}."
             )
-        sample, mean = _super.step_given_score(x=x, score=score, t=t, batch_idx=batch_idx)
+        sample, mean = _super.step_given_score(x=x, score=score, t=t, batch_idx=batch_idx, dt=dt)
         return self.corruption.wrap(sample), self.corruption.wrap(mean)
 
 

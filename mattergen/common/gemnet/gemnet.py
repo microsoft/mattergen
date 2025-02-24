@@ -381,8 +381,8 @@ class GemNetT(torch.nn.Module):
 
         value = torch.arange(idx_s.size(0), device=idx_s.device, dtype=idx_s.dtype)
         # Possibly contains multiple copies of the same edge (for periodic interactions)
-        pyg_device = get_pyg_device()
-        torch_device = get_device()
+        pyg_device = get_pyg_device() if idx_s.device != torch.device("cpu") else idx_s.device
+        torch_device = get_device() if idx_s.device != torch.device("cpu") else idx_s.device
         adj = SparseTensor(
             row=idx_t.to(pyg_device),
             col=idx_s.to(pyg_device),

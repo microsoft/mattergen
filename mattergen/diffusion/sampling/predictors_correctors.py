@@ -72,30 +72,29 @@ class LangevinCorrector(Sampler):
             and not isinstance(corruption, WrappedSDEMixin)
         )
 
-    def update_fn(self, *, x, t, batch_idx) -> SampleAndMean:
+    def update_fn(self, *, x, t, batch_idx, dt: torch.Tensor) -> SampleAndMean:
         assert self.score_fn is not None, "Did you mean to use step_given_score?"
         for _ in range(self.n_steps):
             score = self.score_fn(x, t, batch_idx)
-            x, x_mean = self.step_given_score(
-                x=x,
-                batch_idx=batch_idx,
-                score=score,
-                t=t,
-            )
+            x, x_mean = self.step_given_score(x=x, batch_idx=batch_idx, score=score, t=t, dt=dt)
 
         return x, x_mean
 
-    def get_alpha(self, t: torch.FloatTensor) -> torch.Tensor:
+    def get_alpha(self, t: torch.FloatTensor, dt: torch.FloatTensor) -> torch.Tensor:
         sde = self.corruption
 
         if isinstance(sde, VPSDE):
-            alpha = 1 - sde.beta(t) * sde.T / 1000
+            alpha_bar = sde._marginal_mean_coeff(t) ** 2
+            alpha_bar_before = sde._marginal_mean_coeff(t + dt) ** 2
+            alpha = alpha_bar / alpha_bar_before
         else:
             alpha = torch.ones_like(t)
         return alpha
 
-    def step_given_score(self, *, x, batch_idx: torch.LongTensor | None, score, t) -> SampleAndMean:
-        alpha = self.get_alpha(t)
+    def step_given_score(
+        self, *, x, batch_idx: torch.LongTensor | None, score, t: torch.Tensor, dt: torch.Tensor
+    ) -> SampleAndMean:
+        alpha = self.get_alpha(t, dt=dt)
         snr = self.snr
         noise = torch.randn_like(score)
         grad_norm_square = torch.square(score).reshape(score.shape[0], -1).sum(dim=1)

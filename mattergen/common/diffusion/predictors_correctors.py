@@ -68,9 +68,10 @@ class LatticeLangevinDiffCorrector(pc.LangevinCorrector):
         batch_idx: torch.LongTensor | None,
         score: torch.Tensor,
         t: torch.Tensor,
+        dt: torch.Tensor,
     ) -> SampleAndMean:
         assert isinstance(self.corruption, sde_lib.LatticeVPSDE)
-        alpha = self.get_alpha(t)
+        alpha = self.get_alpha(t, dt=dt)
         snr = self.snr
         noise = torch.randn_like(x)
         noise = sde_lib.make_noise_symmetric_preserve_variance(noise)
