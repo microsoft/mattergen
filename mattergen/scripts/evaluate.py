@@ -37,6 +37,7 @@ def main(
         if structure_matcher == "disordered"
         else DefaultOrderedStructureMatcher()
     )
+    reference = None
     if reference_dataset_path:
         reference = LMDBGZSerializer().deserialize(reference_dataset_path)
 
