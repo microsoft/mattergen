@@ -48,7 +48,7 @@ num_workers:
 batch_size:
   # total batch size of 512, adjust for number of devices, nodes, and gradient accumulation
   train:  ${eval:'(512 // ${trainer.accumulate_grad_batches}) // (${trainer.devices} * ${trainer.num_nodes})'}
-  val: ${eval:'(64 // (${trainer.devices} * ${trainer.num_nodes})'}
-  test: ${eval:'(64 // (${trainer.devices} * ${trainer.num_nodes})'}
+  val: ${eval:'(64 // (${trainer.devices} * ${trainer.num_nodes}))'}
+  test: ${eval:'(64 // (${trainer.devices} * ${trainer.num_nodes}))'}
 
 max_epochs: 900
