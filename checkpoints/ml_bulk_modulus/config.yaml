@@ -33,12 +33,14 @@ adapter:
         name: ml_bulk_modulus
         scaler:
           _target_: mattergen.common.utils.data_utils.StandardScalerTorch
+          log10_transform: true
         unconditional_embedding_module:
           _target_: mattergen.property_embeddings.EmbeddingVector
           hidden_dim: 512
   full_finetuning: true
   load_epoch: last
-  model_path: checkpoints/mattergen_base
+  model_path: null
+  pretrained_name: mattergen_base
 data_module:
   _recursive_: true
   _target_: mattergen.common.data.datamodule.CrystDataModule
@@ -162,6 +164,7 @@ lightning_module:
           name: ml_bulk_modulus
           scaler:
             _target_: mattergen.common.utils.data_utils.StandardScalerTorch
+            log10_transform: true
           unconditional_embedding_module:
             _target_: mattergen.property_embeddings.EmbeddingVector
             hidden_dim: 512
@@ -204,7 +207,7 @@ trainer:
   - _target_: pytorch_lightning.callbacks.TQDMProgressBar
     refresh_rate: 50
   - _target_: mattergen.common.data.callback.SetPropertyScalers
-  check_val_every_n_epoch: 1
+  check_val_every_n_epoch: 5
   devices: 8
   gradient_clip_algorithm: value
   gradient_clip_val: 0.5
