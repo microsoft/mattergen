@@ -8,10 +8,7 @@ from typing import Literal
 import fire
 
 from mattergen.common.data.types import TargetProperty
-from mattergen.common.utils.data_classes import (
-    PRETRAINED_MODEL_NAME,
-    MatterGenCheckpointInfo,
-)
+from mattergen.common.utils.data_classes import PRETRAINED_MODEL_NAME, MatterGenCheckpointInfo
 from mattergen.generator import CrystalGenerator
 
 
@@ -63,6 +60,11 @@ def main(
 
     sampling_config_overrides = sampling_config_overrides or []
     config_overrides = config_overrides or []
+    # Disable generating element types which are not supported or not in the desired chemical
+    # system (if provided).
+    config_overrides += [
+        "++lightning_module.diffusion_module.model.element_mask_func={_target_:'mattergen.denoiser.mask_disallowed_elements',_partial_:True}"
+    ]
     properties_to_condition_on = properties_to_condition_on or {}
     target_compositions = target_compositions or []
 
