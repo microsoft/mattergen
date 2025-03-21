@@ -284,6 +284,7 @@ class StandardScalerTorch(torch.nn.Module):
         stats_dim: tuple[int] = (
             1,
         ),  # dimension of mean, std stats (= X.shape[1:] for some input tensor X)
+        log10_transform: bool = False,  # whether to log10-transform the property before scaling
     ):
         super().__init__()
         # we need to make sure that we initialize means and stds with the right shapes
@@ -295,12 +296,17 @@ class StandardScalerTorch(torch.nn.Module):
         self.register_buffer(
             "stds", torch.atleast_1d(stds) if stds is not None else torch.empty(stats_dim)
         )
+        self.log10_transform = log10_transform
 
     @property
     def device(self) -> torch.device:
         return self.means.device  # type: ignore
 
     def fit(self, X: torch.Tensor):
+        if self.log10_transform:
+            assert torch.all(X > 0), "All values must be positive for log10 transform"
+            X = torch.log10(X)
+
         means: torch.Tensor = torch.atleast_1d(torch.nanmean(X, dim=0).to(self.device))
         stds: torch.Tensor = torch.atleast_1d(
             torch_nanstd(X, dim=0, unbiased=False).to(self.device) + EPSILON
@@ -318,11 +324,17 @@ class StandardScalerTorch(torch.nn.Module):
 
     def transform(self, X: torch.Tensor) -> torch.Tensor:
         assert self.means is not None and self.stds is not None
+        if self.log10_transform:
+            assert torch.all(X > 0), "All values must be positive for log10 transform"
+            X = torch.log10(X)
         return (X - self.means) / self.stds
 
     def inverse_transform(self, X: torch.Tensor) -> torch.Tensor:
         assert self.means is not None and self.stds is not None
-        return X * self.stds + self.means
+        X = X * self.stds + self.means
+        if self.log10_transform:
+            X = torch.pow(10, X)
+        return X
 
     def match_device(self, X: torch.Tensor) -> torch.Tensor:
         assert self.means.numel() > 0 and self.stds.numel() > 0
@@ -334,6 +346,7 @@ class StandardScalerTorch(torch.nn.Module):
         return StandardScalerTorch(
             means=self.means.clone().detach(),
             stds=self.stds.clone().detach(),
+            log10_transform=self.log10_transform,
         )
 
     def forward(self, X: torch.Tensor) -> torch.Tensor:
@@ -344,6 +357,7 @@ class StandardScalerTorch(torch.nn.Module):
             f"{self.__class__.__name__}("
             f"means: {self.means.tolist() if self.means is not None else None}, "
             f"stds: {self.stds.tolist() if self.stds is not None else None})"
+            f"log10_transform: {self.log10_transform}"
         )
 
 
