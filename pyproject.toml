@@ -49,7 +49,7 @@ dependencies = [
 "pymatgen>=2024.6.4",
 "pylint",
 "pytest",
-"pytorch-lightning==2.0.6",
+"pytorch-lightning==2.4.0",
 "setuptools",
 "SMACT",
 "sympy>=1.11.1",
