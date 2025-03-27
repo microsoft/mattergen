@@ -245,8 +245,8 @@ mattergen-train data_module=alex_mp_20 ~trainer.logger trainer.accumulate_grad_b
 Even though not a focus of our paper, you can also train MatterGen in crystal structure prediction (CSP) mode, where it does not denoise the atom types during generation. 
 This gives you the ability to condition on a specific chemical formula for generation. You can train MatterGen in this mode by passing `--config-name=csp` to `run.py`.
 
-To sample from this model, pass `--target_compositions=[{"<element1>": <number_of_element1_atoms>, "<element2>": <number_of_element2_atoms>, ..., "<elementN>": <number_of_elementN_atoms>}] --sampling-config-name=csp` to `generate.py`. 
-An example composition could be `--target_compositions=[{"Na": 1, "Cl": 1}]`.
+To sample from this model, pass `--target_compositions=['{"<element1>": <number_of_element1_atoms>, "<element2>": <number_of_element2_atoms>, ..., "<elementN>": <number_of_elementN_atoms>}'] --sampling-config-name=csp` to `generate.py`. 
+An example composition could be `--target_compositions=['{"Na": 1, "Cl": 1}']`.
 ### Fine-tuning on property data
 
 You can fine-tune the MatterGen base model using the following command.
