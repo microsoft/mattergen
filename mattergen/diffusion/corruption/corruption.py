@@ -49,7 +49,7 @@ def maybe_expand(x: torch.Tensor, batch: B, like: torch.Tensor = None) -> torch.
         return x
     else:
         if x.shape[0] == batch.shape[0]:
-            logging.warn(
+            logging.warning(
                 "Warning: batch shape is == x shape, are you trying to expand something that is already expanded?"
             )
         return x[batch]
