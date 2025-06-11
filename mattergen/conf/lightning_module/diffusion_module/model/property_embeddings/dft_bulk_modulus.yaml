@@ -8,4 +8,4 @@ conditional_embedding_module:
   d_model: ${lightning_module.diffusion_module.model.hidden_dim}
 scaler:
   _target_: mattergen.common.utils.data_utils.StandardScalerTorch
-  log_transform: true
+  log10_transform: true
