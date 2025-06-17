@@ -184,6 +184,7 @@ class GemNetT(torch.nn.Module):
         num_targets: int,
         latent_dim: int,
         atom_embedding: torch.nn.Module,
+        atom_additional_property_dim: int = 0,
         num_spherical: int = 7,
         num_radial: int = 128,
         num_blocks: int = 3,
@@ -306,7 +307,8 @@ class GemNetT(torch.nn.Module):
         # ------------------------------------------------------------------------------------- ###
 
         self.atom_emb = atom_embedding
-        self.atom_latent_emb = nn.Linear(emb_dim_atomic_number + latent_dim, emb_size_atom)
+        self.atom_additional_property_dim = atom_additional_property_dim
+        self.atom_latent_emb = nn.Linear(emb_dim_atomic_number + latent_dim + atom_additional_property_dim, emb_size_atom)
         self.edge_emb = EdgeEmbedding(
             emb_size_atom, num_radial, emb_size_edge, activation=activation
         )
@@ -605,6 +607,7 @@ class GemNetT(torch.nn.Module):
         z: torch.Tensor,
         frac_coords: torch.Tensor,
         atom_types: torch.Tensor,
+        intercalant_origin: torch.Tensor,
         num_atoms: torch.Tensor,
         batch: torch.Tensor,
         lengths: Optional[torch.Tensor] = None,
@@ -619,6 +622,7 @@ class GemNetT(torch.nn.Module):
             z: (N_cryst, num_latent)
             frac_coords: (N_atoms, 3)
             atom_types: (N_atoms, ) with D3PM need to use atomic number
+            intercalant_origin: (N_atoms, )
             num_atoms: (N_cryst,)
             lengths: (N_cryst, 3) (optional, either lengths and angles or lattice must be passed)
             angles: (N_cryst, 3) (optional, either lengths and angles or lattice must be passed)
@@ -675,6 +679,8 @@ class GemNetT(torch.nn.Module):
 
         # Embedding block
         h = self.atom_emb(atomic_numbers)
+        if intercalant_origin is not None:
+            h = torch.cat([h, intercalant_origin.float().unsqueeze(-1)], dim=1)
         # Merge z and atom embedding
         if z is not None:
             z_per_atom = z[batch]

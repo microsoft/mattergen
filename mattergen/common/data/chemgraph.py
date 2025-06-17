@@ -28,6 +28,8 @@ class ChemGraph(pyg_data.Data):
             :obj:`[num_nodes, 3]`. (default: :obj:`None`)
         cell (Tensor, optional): Cell matrix if pbc = True, has shape
             :obj:`[1, 3, 3]`. (default: :obj:`None`)
+        intercalant_origin (OptTensor, optional): Boolean array indicating whether each atom is an intercalant atom with shape
+            :obj:`[num_nodes]`. (default: :obj:`None`)
         edge_index (LongTensor, optional): Edge indexes (sender, receiver)
             :obj:`[2, num_edges]`. (default: :obj:`None`)
         edge_attr (Tensor, optional): Edge attributes
@@ -40,6 +42,7 @@ class ChemGraph(pyg_data.Data):
         atomic_numbers: IntTensor | None = None,
         pos: OptTensor = None,
         cell: OptTensor = None,
+        intercalant_origin: OptTensor = None,
         edge_index: LongTensor | None = None,
         edge_attr: OptTensor = None,
         **kwargs,
@@ -50,6 +53,8 @@ class ChemGraph(pyg_data.Data):
             self.atomic_numbers = atomic_numbers
         if cell is not None:
             self.cell = cell
+        if intercalant_origin is not None:
+            self.intercalant_origin = intercalant_origin
         self.__dict__["_frozen"] = True
 
     def __setattr__(self, attr, value):
@@ -86,6 +91,7 @@ class ChemGraph(pyg_data.Data):
         elif field_name in [
             "pos",
             "atomic_numbers",
+            "intercalant_origin",
         ]:
             # per-node attributes
             return self.batch

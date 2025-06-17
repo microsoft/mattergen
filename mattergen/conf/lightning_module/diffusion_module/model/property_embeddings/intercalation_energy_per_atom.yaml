@@ -1,0 +1,10 @@
+_target_: mattergen.property_embeddings.PropertyEmbedding
+name: intercalation_energy_per_atom
+unconditional_embedding_module:
+  _target_: mattergen.property_embeddings.EmbeddingVector
+  hidden_dim: ${lightning_module.diffusion_module.model.hidden_dim}
+conditional_embedding_module:
+  _target_: mattergen.diffusion.model_utils.NoiseLevelEncoding
+  d_model: ${lightning_module.diffusion_module.model.hidden_dim}
+scaler:
+  _target_: mattergen.common.utils.data_utils.StandardScalerTorch

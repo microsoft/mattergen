@@ -25,6 +25,35 @@ logger = logging.getLogger(__name__)
 def init_adapter_lightningmodule_from_pretrained(
     adapter_cfg: DictConfig, lightning_module_cfg: DictConfig
 ) -> Tuple[pl.LightningModule, DictConfig]:
+    """
+   事前学習済みモデルからアダプターモデルを初期化する関数です。
+
+   詳細な処理フロー:
+   1. 事前学習済みモデルの読み込み
+      - model_pathが指定されている場合: 指定されたパスからモデルを読み込み
+      - pretrained_nameが指定されている場合: Hugging Face Hubからモデルを読み込み
+      - 両方が指定されている場合: model_pathを優先し、pretrained_nameは無視
+
+   2. 設定の統合
+      - 事前学習済みモデルの設定を読み込み
+      - デノイザーの設定を事前学習済みモデルからアダプター設定にコピー
+      - 既存のproperty_embeddingsフィールドは適応対象から除外
+      - GemNetTモデルをGemNetTCtrlモデルに置き換え
+      - 条件付き生成用のパラメータcondition_on_adaptを設定
+
+   3. 重みの読み込みと初期化
+      - 事前学習済みモデルの重みを読み込み
+      - 新しいモデルの重みを初期化
+      - 共通する重みを事前学習済みモデルから更新
+      - フルファインチューニングでない場合、事前学習済みの重みを凍結（requires_grad=False）
+
+   引数:
+   - adapter_cfg: DictConfig - アダプターの設定（モデルパス、事前学習済みモデル名、フルファインチューニングフラグなど）
+   - lightning_module_cfg: DictConfig - Lightningモジュールの設定
+
+   戻り値:
+   - Tuple[pl.LightningModule, DictConfig] - 初期化されたLightningモジュールとその設定
+   """
 
     if adapter_cfg.model_path is not None:
         if adapter_cfg.pretrained_name is not None:
@@ -111,6 +140,41 @@ def init_adapter_lightningmodule_from_pretrained(
     config_path=str(MODELS_PROJECT_ROOT / "conf"), config_name="finetune", version_base="1.1"
 )
 def mattergen_finetune(cfg: omegaconf.DictConfig):
+    """
+    MatterGenモデルのファインチューニングを実行するメイン関数です。
+
+    詳細な処理フロー:
+    1. 初期設定
+        - Tensor Coreアクセラレーションを有効化（トレーニング速度を約2倍に向上）
+        - 設定ファイルのパス: MODELS_PROJECT_ROOT/conf/finetune.yaml
+
+    2. コンポーネントの初期化
+        - PyTorch Lightning Trainerの初期化
+        - データモジュールの初期化
+        - 事前学習済みモデルからアダプターモデルの初期化
+
+    3. 設定の管理
+        - アダプター設定をLightningモジュール設定に統合
+        - 設定をJSON形式で出力
+        - 設定を保存するコールバックの追加
+        - チェックポイントに設定を追加するコールバックの追加
+
+    4. トレーニング実行
+        - モデルとデータモジュールを使用してトレーニングを開始
+        - チェックポイントからの再開は行わない（ckpt_path=None）
+
+    設定管理の特徴:
+    - Hydraを使用した設定の管理
+    - 設定の自動保存とチェックポイントへの追加
+    - 実験の再現性を確保するための設定の完全な記録
+
+    引数:
+    - cfg: omegaconf.DictConfig - ファインチューニングの設定
+      - trainer: トレーナーの設定
+      - data_module: データモジュールの設定
+      - adapter: アダプターの設定
+      - lightning_module: Lightningモジュールの設定
+    """
     # Tensor Core acceleration (leads to ~2x speed-up during training)
     torch.set_float32_matmul_precision("high")
     trainer: pl.Trainer = maybe_instantiate(cfg.trainer, pl.Trainer)

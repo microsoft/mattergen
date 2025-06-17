@@ -9,7 +9,6 @@ from zipfile import ZipFile
 
 import ase.io
 import hydra
-import torch
 from hydra.utils import instantiate
 from omegaconf import DictConfig, OmegaConf
 from pymatgen.core.structure import Structure
@@ -176,7 +175,7 @@ class CrystalGenerator:
     batch_size: int | None = None
     num_batches: int | None = None
     target_compositions_dict: list[dict[str, float]] | None = None
-    num_atoms_distribution: str = "ALEX_MP_20"
+    num_atoms_distribution: str = "LC_DATABASE_REV_WITH_CIF"
 
     # Conditional generation
     diffusion_guidance_factor: float = 0.0
@@ -191,7 +190,7 @@ class CrystalGenerator:
 
     # Config path, if None will default to DEFAULT_SAMPLING_CONFIG_PATH
     sampling_config_path: Path | None = None
-    sampling_config_name: str = "default"
+    sampling_config_name: str = "lc"
 
     record_trajectories: bool = True  # store all intermediate samples by default
 

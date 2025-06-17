@@ -1,0 +1,18 @@
+_target_: mattergen.diffusion.diffusion_module.DiffusionModule
+loss_fn:
+  _target_: mattergen.common.loss.MaterialsLoss
+  reduce: sum
+  include_pos: True
+  include_cell: True
+  include_atomic_numbers: True
+  d3pm_hybrid_lambda: 0.01
+  weights:
+    pos: 1.0
+    cell: 1.0
+    atomic_numbers: 1.0
+model: mattergen-lc
+corruption: lc
+pre_corruption_fn:
+  _target_: mattergen.property_embeddings.SetEmbeddingType
+  p_unconditional: 0.2
+  dropout_fields_iid: false

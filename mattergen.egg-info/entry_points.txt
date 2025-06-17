@@ -1,0 +1,6 @@
+[console_scripts]
+csv-to-dataset = mattergen.scripts.csv_to_dataset:main
+mattergen-evaluate = mattergen.scripts.evaluate:_main
+mattergen-finetune = mattergen.scripts.finetune:mattergen_finetune
+mattergen-generate = mattergen.scripts.generate:_main
+mattergen-train = mattergen.scripts.run:mattergen_main

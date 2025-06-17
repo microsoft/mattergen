@@ -1,0 +1,45 @@
+Metadata-Version: 2.4
+Name: mattergen
+Version: 1.0
+Requires-Python: >=3.10
+License-File: LICENSE
+License-File: NOTICE
+Requires-Dist: ase>=3.22.1
+Requires-Dist: autopep8
+Requires-Dist: cachetools
+Requires-Dist: contextlib2
+Requires-Dist: emmet-core>=0.84.2
+Requires-Dist: fire
+Requires-Dist: huggingface-hub
+Requires-Dist: hydra-core==1.3.1
+Requires-Dist: hydra-joblib-launcher==1.1.5
+Requires-Dist: jupyterlab>=4.2.5
+Requires-Dist: lmdb
+Requires-Dist: matplotlib==3.8.4
+Requires-Dist: matscipy>=0.7.0
+Requires-Dist: mattersim>=1.1
+Requires-Dist: monty==2024.7.30
+Requires-Dist: notebook>=7.2.2
+Requires-Dist: numpy<2.0
+Requires-Dist: omegaconf==2.3.0
+Requires-Dist: pymatgen>=2024.6.4
+Requires-Dist: pylint
+Requires-Dist: pytest
+Requires-Dist: pytorch-lightning==2.0.6
+Requires-Dist: seaborn>=0.13.2
+Requires-Dist: setuptools
+Requires-Dist: SMACT
+Requires-Dist: sympy>=1.11.1
+Requires-Dist: torch==2.2.1+cu118; sys_platform == "linux"
+Requires-Dist: torchvision==0.17.1+cu118; sys_platform == "linux"
+Requires-Dist: torchaudio==2.2.1+cu118; sys_platform == "linux"
+Requires-Dist: torch==2.4.1; sys_platform == "darwin"
+Requires-Dist: torchvision==0.19.1; sys_platform == "darwin"
+Requires-Dist: torchaudio==2.4.1; sys_platform == "darwin"
+Requires-Dist: torch_cluster
+Requires-Dist: torch_geometric>=2.5
+Requires-Dist: torch_scatter
+Requires-Dist: torch_sparse
+Requires-Dist: tqdm
+Requires-Dist: wandb>=0.10.33
+Dynamic: license-file

@@ -1,0 +1,10 @@
+_target_: mattergen.property_embeddings.PropertyEmbedding
+name: chemical_system
+unconditional_embedding_module:
+  _target_: mattergen.property_embeddings.EmbeddingVector
+  hidden_dim: ${lightning_module.diffusion_module.model.hidden_dim}
+conditional_embedding_module:
+  _target_: mattergen.property_embeddings.ChemicalSystemMultiHotEmbedding
+  hidden_dim: ${lightning_module.diffusion_module.model.hidden_dim}
+scaler:
+  _target_: torch.nn.Identity

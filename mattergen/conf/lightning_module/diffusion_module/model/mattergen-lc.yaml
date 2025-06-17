@@ -1,0 +1,29 @@
+_target_: mattergen.denoiser.GemNetTDenoiser
+hidden_dim: 512
+gemnet:
+  _target_: mattergen.common.gemnet.gemnet.GemNetT
+  num_targets: 1
+  latent_dim: ${eval:'${..hidden_dim} * (1 + len(${..property_embeddings}))'}  # 1 is for time encoding.
+  atom_embedding:
+    _target_: mattergen.common.gemnet.layers.embedding_block.AtomEmbedding
+    emb_size: ${...hidden_dim}
+    with_mask_type: ${eval:'${...denoise_atom_types} and "${...atom_type_diffusion}" == "mask"'}
+  atom_additional_property_dim: 1
+  emb_size_atom: ${..hidden_dim}
+  emb_size_edge: ${..hidden_dim}
+  max_neighbors: 50
+  max_cell_images_per_dim: 5
+  cutoff: 7.
+  num_blocks: 4
+  regress_stress: true
+  otf_graph: true
+  scale_file: ${oc.env:PROJECT_ROOT}/common/gemnet/gemnet-dT.json
+denoise_atom_types: true
+atom_type_diffusion: mask
+property_embeddings_adapt: {}
+property_embeddings: {}
+defaults: []
+  # - property_embeddings@property_embeddings.formation_energy_per_atom: formation_energy_per_atom
+  # - property_embeddings@property_embeddings.intercalation_energy_per_atom: intercalation_energy_per_atom
+  # - property_embeddings@property_embeddings.intercalant_chemical_system: intercalant_chemical_system
+  # - property_embeddings@property_embeddings.host_chemical_system: host_chemical_system

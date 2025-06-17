@@ -16,6 +16,7 @@ from pymatgen.io.cif import CifParser
 from pymatgen.symmetry.groups import SpaceGroup
 from torch.utils.data import Dataset
 from tqdm.auto import tqdm
+from ast import literal_eval
 
 from mattergen.common.data.chemgraph import ChemGraph
 from mattergen.common.data.transform import Transform
@@ -29,6 +30,10 @@ CORE_STRUCTURE_FILE_NAMES = {
     "atomic_numbers": "atomic_numbers.npy",
     "num_atoms": "num_atoms.npy",
     "structure_id": "structure_id.npy",
+}
+
+LC_STRUCTURE_FILE_NAMES = {
+    "intercalant_origin": "intercalant_origin.npy",
 }
 
 T = TypeVar("T", bound="BaseDataset")
@@ -152,6 +157,7 @@ class CrystalDataset(BaseDataset):
     atomic_numbers: numpy.typing.NDArray
     num_atoms: numpy.typing.NDArray
     structure_id: numpy.typing.NDArray
+    intercalant_origin: numpy.typing.NDArray
     properties: dict[PropertySourceId, numpy.typing.NDArray] = field(default_factory=dict)
     transforms: list[Transform] | None = None
 
@@ -186,15 +192,15 @@ class CrystalDataset(BaseDataset):
 
     def __getitem__(self, index: int) -> ChemGraph:
         pos_offset = self.index_offset[index]
+        intercalant_origin_offset = self.index_offset[index]
         num_atoms = torch.tensor(self.num_atoms[index])
 
         props_dict = self.get_properties_dict(index)
         data = ChemGraph(
             pos=torch.from_numpy(self.pos[pos_offset : pos_offset + num_atoms]).float() % 1.0,
             cell=torch.from_numpy(self.cell[index]).float().unsqueeze(0),
-            atomic_numbers=torch.from_numpy(
-                self.atomic_numbers[pos_offset : pos_offset + num_atoms]
-            ),
+            atomic_numbers=torch.from_numpy(self.atomic_numbers[pos_offset : pos_offset + num_atoms]),
+            intercalant_origin=torch.from_numpy(self.intercalant_origin[intercalant_origin_offset : intercalant_origin_offset + num_atoms]),
             num_atoms=num_atoms,
             num_nodes=num_atoms,  # special attribute used for batching in pytorch geometric
             # mypy does not like string literals as kwargs, see https://github.com/python/mypy/pull/10237
@@ -219,6 +225,7 @@ class CrystalDataset(BaseDataset):
             pos=self.pos[batch_indices],
             cell=self.cell[indices],
             atomic_numbers=self.atomic_numbers[batch_indices],
+            intercalant_origin=self.intercalant_origin[batch_indices],
             num_atoms=self.num_atoms[indices],
             structure_id=self.structure_id[indices],
             properties={k: v[indices] for k, v in self.properties.items()},
@@ -233,6 +240,7 @@ class CrystalDataset(BaseDataset):
         pos = repeat_along_first_axis(self.pos, repeats)
         cell = repeat_along_first_axis(self.cell, repeats)
         atomic_numbers = repeat_along_first_axis(self.atomic_numbers, repeats)
+        intercalant_origin = repeat_along_first_axis(self.intercalant_origin, repeats)
         num_atoms = repeat_along_first_axis(self.num_atoms, repeats)
         structure_id = repeat_along_first_axis(self.structure_id, repeats)
         properties = {k: repeat_along_first_axis(v, repeats) for k, v in self.properties.items()}
@@ -240,6 +248,7 @@ class CrystalDataset(BaseDataset):
             pos=pos,
             cell=cell,
             atomic_numbers=atomic_numbers,
+            intercalant_origin=intercalant_origin,
             num_atoms=num_atoms,
             structure_id=structure_id,
             properties=properties,
@@ -270,6 +279,7 @@ class NumAtomsCrystalDataset(BaseDataset):
             pos=torch.full((num_atoms, 3), fill_value=torch.nan, dtype=torch.float),
             cell=torch.full((1, 3, 3), fill_value=torch.nan, dtype=torch.float),
             atomic_numbers=torch.full((num_atoms,), fill_value=-1, dtype=torch.long),
+            intercalant_origin=torch.full((num_atoms,), fill_value=torch.nan, dtype=torch.float),
             num_atoms=num_atoms,
             num_nodes=num_atoms,  # special attribute used for batching in pytorch geometric
             # mypy does not like string literals as kwargs, see https://github.com/python/mypy/pull/10237
@@ -343,12 +353,13 @@ def structures_to_numpy(
     Convert a list of Structures to numpy arrays for positions, cell, atomic numbers,
     number of atoms and structure id. Returns a dictionary with the numpy arrays.
     """
-    structure_infos: dict[str, list[numpy.typing.NDArray]] = {
+    structure_infos: dict = {
         "pos": [],
         "cell": [],
         "atomic_numbers": [],
         "num_atoms": [],
         "structure_id": [],
+        "intercalant_origin": [],
     }
     properties = defaultdict(list)
     for structure in tqdm(structures, desc="Converting structures to numpy", miniters=5000):
@@ -364,6 +375,7 @@ def structures_to_numpy(
         structure_infos["atomic_numbers"].append(struct.atomic_numbers)
         structure_infos["num_atoms"].append(len(struct))
         structure_infos["structure_id"].append(structure.properties["material_id"])
+        structure_infos["intercalant_origin"].append(structure.site_properties["intercalant_origin"])
         for prop, prop_val in structure.properties.items():
             if prop in PROPERTY_SOURCE_IDS:
                 properties[prop].append(prop_val)
@@ -372,6 +384,7 @@ def structures_to_numpy(
     structure_infos["atomic_numbers"] = np.concatenate(structure_infos["atomic_numbers"])
     structure_infos["num_atoms"] = np.array(structure_infos["num_atoms"])
     structure_infos["structure_id"] = np.array(structure_infos["structure_id"])
+    structure_infos["intercalant_origin"] = np.concatenate(structure_infos["intercalant_origin"])
     for prop in properties:
         properties[prop] = np.array(properties[prop])
         assert len(properties[prop]) == len(structure_infos["structure_id"])
@@ -417,6 +430,10 @@ class CrystalDatasetBuilder:
     @cached_property
     def atomic_numbers(self):
         return self._load_file(CORE_STRUCTURE_FILE_NAMES["atomic_numbers"])
+
+    @cached_property
+    def intercalant_origin(self):
+        return self._load_file(LC_STRUCTURE_FILE_NAMES["intercalant_origin"])
 
     @cached_property
     def num_atoms(self):
@@ -475,6 +492,7 @@ class CrystalDatasetBuilder:
             pos=self.pos,
             cell=self.cell,
             atomic_numbers=self.atomic_numbers,
+            intercalant_origin=self.intercalant_origin,
             num_atoms=self.num_atoms,
             structure_id=self.structure_id,
             properties=self.properties,
@@ -529,7 +547,7 @@ class CrystalDatasetBuilder:
         df = pd.read_csv(csv_path)
 
         structures = [
-            CifParser.from_str(s).parse_structures(primitive=True, on_error="ignore")[0]
+            CifParser.from_str(s).parse_structures(primitive=False, on_error="ignore")[0] # インターカレーション化合物対応のためprimitive=Falseにする.
             for s in tqdm(df["cif"], desc="Parsing CIFs", miniters=5000)
         ]
         for ix, material_id in enumerate(df["material_id"]):
@@ -537,12 +555,18 @@ class CrystalDatasetBuilder:
             for prop in df.columns:
                 if prop in PROPERTY_SOURCE_IDS:
                     structures[ix].properties[prop] = df[prop][ix]
+        if "intercalant_origin" in df.columns:
+            for ix, struct in enumerate(structures):
+                struct.add_site_property("intercalant_origin", literal_eval(df.iloc[ix]["intercalant_origin"]))
         structure_infos, properties = structures_to_numpy(structures)
 
         os.makedirs(cache_path, exist_ok=True)
         print(f"Storing cached dataset in {cache_path}.")
         for k, filename in CORE_STRUCTURE_FILE_NAMES.items():
             np.save(f"{cache_path}/{filename}", structure_infos[k])
+        for k, filename in LC_STRUCTURE_FILE_NAMES.items():
+            if k in structure_infos:
+                np.save(f"{cache_path}/{filename}", structure_infos[k])
         for prop in properties:
             PropertyValues(
                 values=properties[prop],

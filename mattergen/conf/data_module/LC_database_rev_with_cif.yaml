@@ -1,0 +1,54 @@
+_target_: mattergen.common.data.datamodule.CrystDataModule
+_recursive_: true
+properties: []
+  # - "formation_energy_per_atom"
+  # - "intercalation_energy_per_atom"
+  # - "intercalant_chemical_system"
+  # - "host_chemical_system"
+
+transforms:
+- _target_: mattergen.common.data.transform.symmetrize_lattice
+  _partial_: true
+- _target_: mattergen.common.data.transform.set_chemical_system_string
+  _partial_: true
+
+dataset_transforms: 
+  - _target_: mattergen.common.data.dataset_transform.filter_sparse_properties
+    _partial_: true
+
+average_density: 0.0620 # atoms/Angstrom**3
+root_dir: ${oc.env:PROJECT_ROOT}/../datasets/cache/LC_database_rev_with_cif
+
+train_dataset:
+  _target_: mattergen.common.data.dataset.CrystalDataset.from_cache_path
+  cache_path: ${data_module.root_dir}/train
+  properties: ${data_module.properties}
+  transforms: ${data_module.transforms}
+  dataset_transforms: ${data_module.dataset_transforms}
+
+val_dataset:
+  _target_: mattergen.common.data.dataset.CrystalDataset.from_cache_path
+  cache_path: ${data_module.root_dir}/val
+  properties: ${data_module.properties}
+  transforms: ${data_module.transforms}
+  dataset_transforms: ${data_module.dataset_transforms}
+
+test_dataset:
+  _target_: mattergen.common.data.dataset.CrystalDataset.from_cache_path
+  cache_path: ${data_module.root_dir}/test
+  properties: ${data_module.properties}
+  transforms: ${data_module.transforms}
+  dataset_transforms: ${data_module.dataset_transforms}
+
+num_workers:
+  train: 0
+  val: 0
+  test: 0
+
+batch_size:
+  # total batch size of 512, adjust for number of devices, nodes, and gradient accumulation
+  train:  ${eval:'(512 // ${trainer.accumulate_grad_batches}) // (${trainer.devices} * ${trainer.num_nodes})'}
+  val: ${eval:'(64 // (${trainer.devices} * ${trainer.num_nodes}))'}
+  test: ${eval:'(64 // (${trainer.devices} * ${trainer.num_nodes}))'}
+
+max_epochs: 900

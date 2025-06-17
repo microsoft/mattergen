@@ -14,7 +14,8 @@ strategy:
   
 logger:
   _target_: pytorch_lightning.loggers.WandbLogger
-  project: crystal-generation
+  project: mattergen
+  entity: oib12
   job_type: train
   settings:
     _target_: wandb.Settings

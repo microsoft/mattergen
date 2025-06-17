@@ -1,0 +1,8 @@
+{
+    "python.analysis.extraPaths": [
+        "/homenfs1/okuda/mattergen-master/mattergen/.venv-gpu/lib/python3.10/site-packages"
+    ],
+    "python.defaultInterpreterPath": "${workspaceFolder}/../finetuning/.venv/bin/python3.10", // homenfs1ではhomenfsxx3はマウントされていないため.venv-gpu環境のPythonを指定するとエラーが生じる
+    "python.analysis.typeCheckingMode": "basic",
+    "python.terminal.activateEnvironment": false
+}

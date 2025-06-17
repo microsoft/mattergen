@@ -53,11 +53,12 @@ class GemNetTAdapter(GemNetTDenoiser):
         """
         augment <z_per_crystal> with <self.condition_embs_adapt>.
         """
-        (frac_coords, lattice, atom_types, num_atoms, batch,) = (
+        (frac_coords, lattice, atom_types, num_atoms, intercalant_origin, batch,) = (
             x["pos"],
             x["cell"],
             x["atomic_numbers"],
             x["num_atoms"],
+            x["intercalant_origin"],
             x.get_batch_idx("pos"),
         )
         # (num_atoms, hidden_dim) (num_crysts, 3)
@@ -93,6 +94,7 @@ class GemNetTAdapter(GemNetTDenoiser):
             frac_coords=frac_coords,
             atom_types=atom_types,
             num_atoms=num_atoms,
+            intercalant_origin=intercalant_origin,
             batch=batch,
             lengths=None,
             angles=None,

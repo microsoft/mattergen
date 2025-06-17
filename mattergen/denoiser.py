@@ -232,6 +232,10 @@ class GemNetTDenoiser(ScoreModel):
             x["num_atoms"],
             x.get_batch_idx("pos"),
         )
+        if "intercalant_origin" in x:
+            intercalant_origin = x["intercalant_origin"]
+        else:
+            intercalant_origin = None
 
         # (num_atoms, hidden_dim) (num_crysts, 3)
         t_enc = self.noise_level_encoding(t).to(lattice.device)
@@ -249,6 +253,7 @@ class GemNetTDenoiser(ScoreModel):
             z=z_per_crystal,
             frac_coords=frac_coords,
             atom_types=atom_types,
+            intercalant_origin=intercalant_origin,
             num_atoms=num_atoms,
             batch=batch,
             lengths=None,
