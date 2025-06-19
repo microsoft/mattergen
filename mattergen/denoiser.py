@@ -188,10 +188,15 @@ class GemNetTDenoiser(ScoreModel):
 
         Args:
             gemnet: a GNN module
-            hidden_dim (int, optional): Number of hidden dimensions in the GemNet. Defaults to 128.
+            hidden_dim (int, optional): Number of hidden dimensions in the GemNet. Defaults to 512.
             denoise_atom_types (bool, optional): Whether to denoise the atom  types. Defaults to False.
             atom_type_diffusion (str, optional): Which type of atom type diffusion to use. Defaults to "mask".
-            condition_on (Optional[List[str]], optional): Which aspects of the data to condition on. Strings must be in ["property", "chemical_system"]. If None (default), condition on ["chemical_system"].
+            property_embeddings (torch.nn.ModuleDict, optional): Property embeddings used in a
+                conditioned model trained from scratch.
+            property_embeddings_adapt (torch.nn.ModuleDict, optional): Property embeddings used in
+                a conditioned model, fine-tuned from a base model. Unused here.
+            element_mask_func (Callable, optional): Function to mask out unsupported or undesired
+                elements that shall not be contained in the generated structures.
         """
         super(GemNetTDenoiser, self).__init__()
 
