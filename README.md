@@ -158,16 +158,16 @@ In [`plot_benchmark_results.ipynb`](benchmark/plot_benchmark_results.ipynb) we p
 </p>
 For convenience, here are the **numerical results from Figs. 2e and 2f in the paper** (as well as Table D4 in the supplementary information):
 
-Model | % S.U.N. | RMSD
-------|----------|-------
-MatterGen | 38.57 | 0.021
-MatterGen MP20 | 22.27 | 0.110
-DiffCSP Alex-MP-20 | 33.27 | 0.104
-DiffCSP MP20 | 12.71 | 0.232
-CDVAE | 13.99 | 0.359
-FTCP | 0. | 1.492
-G-SchNet | 0.98 | 1.347
-P-G-SchNet | 1.29 | 1.360
+Model | % S.U.N. | RMSD | % Stable | % Unique | % Novel
+------|----------|------|----------|----------|--------|
+MatterGen | 38.57 | 0.021 | 74.41 | 100.0 | 61.96
+MatterGen MP20 | 22.27 | 0.110 | 42.19 | 100.0 | 75.44
+DiffCSP Alex-MP-20 | 33.27 | 0.104 | 63.33 | 99.90 | 66.94
+DiffCSP MP20 | 12.71 | 0.232 | 36.23 | 100.0 | 70.73
+CDVAE | 13.99 | 0.359 | 19.31 | 100.0 | 92.00 
+FTCP | 0.0 | 1.492 | 0.0 | 100.0 | 100.0
+G-SchNet | 0.98 | 1.347 | 1.63 | 100.0 | 98.23
+P-G-SchNet | 1.29 | 1.360 | 3.11 | 100.0 | 88.40
 
 ### Evaluate using your own reference dataset
 
