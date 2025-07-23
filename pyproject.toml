@@ -24,7 +24,7 @@ known_first_party = [
 
 [project]
 name = "mattergen"
-version = "1.0.1"
+version = "1.0.2"
 requires-python = ">= 3.10"
 
 dependencies = [
