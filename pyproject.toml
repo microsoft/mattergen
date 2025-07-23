@@ -63,7 +63,7 @@ dependencies = [
 "pymatgen>=2024.6.4",
 "pylint",
 "pytest",
-"pytorch-lightning==2.0.6",
+"pytorch-lightning==2.4.0",
 "seaborn>=0.13.2",  # for plotting
 "setuptools",
 "SMACT",
