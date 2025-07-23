@@ -26,6 +26,20 @@ known_first_party = [
 name = "mattergen"
 version = "1.0.2"
 requires-python = ">= 3.10"
+description = "MatterGen is a generative model for inorganic materials design across the periodic table that can be fine-tuned to steer the generation towards a wide range of property constraints."
+readme = "README.md"
+license = "MIT"
+urls.repository = "https://github.com/microsoft/mattergen"
+classifiers = [
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Chemistry",
+  "Topic :: Scientific/Engineering :: Physics",
+]
 
 dependencies = [
 "ase>=3.22.1",
@@ -68,6 +82,14 @@ dependencies = [
 "wandb>=0.10.33",
 ]
 
+[project.scripts]
+mattergen-generate = "mattergen.scripts.generate:_main"
+mattergen-train = "mattergen.scripts.run:mattergen_main"
+mattergen-finetune = "mattergen.scripts.finetune:mattergen_finetune"
+mattergen-evaluate = "mattergen.scripts.evaluate:_main"
+csv-to-dataset = "mattergen.scripts.csv_to_dataset:main"
+
+
 [tool.setuptools.packages.find]
 include = ["mattergen*"]
 
@@ -100,9 +122,6 @@ url = "https://download.pytorch.org/whl/cu118"
 explicit = true
 
 
-[project.scripts]
-mattergen-generate = "mattergen.scripts.generate:_main"
-mattergen-train = "mattergen.scripts.run:mattergen_main"
-mattergen-finetune = "mattergen.scripts.finetune:mattergen_finetune"
-mattergen-evaluate = "mattergen.scripts.evaluate:_main"
-csv-to-dataset = "mattergen.scripts.csv_to_dataset:main"
+[build-system]
+requires = ["setuptools >=77.0.3"]
+build-backend = "setuptools.build_meta"
