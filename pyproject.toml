@@ -24,7 +24,7 @@ known_first_party = [
 
 [project]
 name = "mattergen"
-version = "1.0.2"
+version = "1.0.3"
 requires-python = ">= 3.10"
 description = "MatterGen is a generative model for inorganic materials design across the periodic table that can be fine-tuned to steer the generation towards a wide range of property constraints."
 readme = "README.md"
