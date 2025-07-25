@@ -93,6 +93,9 @@ csv-to-dataset = "mattergen.scripts.csv_to_dataset:main"
 [tool.setuptools.packages.find]
 include = ["mattergen*"]
 
+[tool.setuptools.package-data]
+"*" = ["**.yaml", "**.csv", "**.pt", "**.json"]
+
 [tool.uv.sources]
 torch = { index = "pytorch_linux",  marker = "sys_platform == 'linux'" }
 torchvision = { index = "pytorch_linux",  marker = "sys_platform == 'linux'" }
