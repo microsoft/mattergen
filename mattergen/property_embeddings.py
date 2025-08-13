@@ -425,11 +425,20 @@ class ChemicalSystemMultiHotEmbedding(torch.nn.Module):
         list[list[str]] -- a list of length n_structures_in_batch of chemical systems for each structure
             where the chemical system is specified as a list of unique elements in the structure.
         """
-        if isinstance(x[0], str):
-            # list[Sequence[str]]
-            x = [_x.split("-") for _x in x if isinstance(_x, str)]
+        def _process_item(item):
+            if isinstance(item, str):
+                return item.split("-")
+            elif isinstance(item, list):
+                # Flatten any nested dash-delimited elements
+                return [
+                    element 
+                    for subitem in item 
+                    for element in (subitem.split("-") if isinstance(subitem, str) and "-" in subitem else [subitem])
+                ]
+            else:
+                return item
 
-        return x  # type: ignore
+        return [_process_item(item) for item in x] # type: ignore
 
     def forward(self, x: list[str] | list[list[str]]) -> torch.Tensor:
         """
