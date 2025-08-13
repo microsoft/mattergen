@@ -3,6 +3,7 @@
 
 import warnings
 from typing import Any, Callable, Iterable, Iterator, Sequence, TypeVar, overload
+from itertools import chain
 
 from torch import Tensor
 from torch_geometric.data import Batch, Data
@@ -236,8 +237,20 @@ def _merge(xs: list[PyTree[T]], structure: PyTree[int]) -> PyTree[T]:
                     )
                     del x[attr]  # type: ignore
 
+        # Batch.from_data_list will concat attr: list[list] to list[list[list]], we need to handle separately
+        attr_is_twod_list = []
+
+        for attr in attrs:
+            if all(isinstance(x[attr], list) for x in xs) and all(isinstance(_x,list) for x in xs for _x in x[attr]):
+                attr_is_twod_list.append(attr)
+
         try:
             batch = Batch.from_data_list(xs)
+
+            # handle attr: list[list] as a special case
+            for attr in attr_is_twod_list:
+                # convert batch.attr: list[list[list]] to list[list]
+                batch[attr] = list(chain(*[x[attr] for x in xs]))
         except Exception as e:
             # Check if dtypes do not match:
             for attr in attrs:
