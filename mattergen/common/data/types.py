@@ -11,7 +11,7 @@ from emmet.core.material import PropertyOrigin
 from mattergen.common.utils.globals import PROPERTY_SOURCE_IDS
 
 PropertySourceId = str
-TargetProperty = dict[PropertySourceId, int | float | Sequence[str]]
+TargetProperty = dict[PropertySourceId, int | float | str | Sequence[str]]
 
 
 @dataclass(frozen=True)

@@ -75,10 +75,18 @@ class GuidedPredictorCorrector(PredictorCorrector):
             batch_no_condition = self._remove_conditioning_fn(x)
             batch_with_condition = self._keep_conditioning_fn(x)
             joint_batch = collate([batch_no_condition, batch_with_condition])
+
+            for attr,value in batch_no_condition.items():
+                if isinstance(value, list):
+                    joint_batch[attr] = batch_no_condition[attr]+batch_with_condition[attr]
+
+
             combined_score = super(GuidedPredictorCorrector, self)._score_fn(
                 x=joint_batch, t=torch.cat([t, t], dim=0),
             )
             # Split the combined score back into unconditional and conditional parts.
+            # Any batch.attr: list fields will be wrong here because of the manual concatenation above
+            # this should be ok as self._multi_corruption.corrupted_fields are always torch.Tensor
             unconditional_score = combined_score[0]
             conditional_score = combined_score[1]
 
