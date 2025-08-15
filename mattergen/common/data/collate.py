@@ -3,7 +3,7 @@
 
 import warnings
 from typing import Any, Callable, Iterable, Iterator, Sequence, TypeVar, overload
-from itertools import chain
+
 
 from torch import Tensor
 from torch_geometric.data import Batch, Data
