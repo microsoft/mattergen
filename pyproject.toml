@@ -71,7 +71,7 @@ dependencies = [
 "torch==2.2.1+cu118; sys_platform == 'linux'", 
 "torchvision==0.17.1+cu118; sys_platform == 'linux'",
 "torchaudio==2.2.1+cu118; sys_platform == 'linux'",
-"torch==2.4.1; sys_platform == 'darwin'",
+"torch==2.8.0; sys_platform == 'darwin'",
 "torchvision==0.19.1; sys_platform == 'darwin'",
 "torchaudio==2.4.1; sys_platform == 'darwin'",
 "torch_cluster",
