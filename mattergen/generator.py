@@ -32,6 +32,7 @@ from mattergen.common.utils.eval_utils import (
 from mattergen.common.utils.globals import DEFAULT_SAMPLING_CONFIG_PATH, get_device
 from mattergen.diffusion.lightning_module import DiffusionLightningModule
 from mattergen.diffusion.sampling.pc_sampler import PredictorCorrector
+from materials.common.utils.data_classes import ProgressCallback
 
 
 def draw_samples_from_sampler(
@@ -41,6 +42,7 @@ def draw_samples_from_sampler(
     output_path: Path | None = None,
     cfg: DictConfig | None = None,
     record_trajectories: bool = True,
+    progress_callback: ProgressCallback | None = None,
 ) -> list[Structure]:
 
     # Dict
@@ -51,7 +53,9 @@ def draw_samples_from_sampler(
 
     all_samples_list = []
     all_trajs_list = []
-    for conditioning_data, mask in tqdm(condition_loader, desc="Generating samples"):
+    for batch_idx, (conditioning_data, mask) in enumerate(tqdm(condition_loader, desc="Generating samples")):
+        if progress_callback is not None:
+            progress_callback(progress=batch_idx / len(condition_loader))
 
         # generate samples
         if record_trajectories:
@@ -60,6 +64,11 @@ def draw_samples_from_sampler(
         else:
             sample, mean = sampler.sample(conditioning_data, mask)
         all_samples_list.extend(mean.to_data_list())
+
+    if progress_callback is not None:
+        # log 100% progress
+        progress_callback(progress=1.0)
+
     all_samples = collate(all_samples_list)
     assert isinstance(all_samples, ChemGraph)
     lengths, angles = lattice_matrix_to_params_torch(all_samples.cell)
@@ -198,6 +207,9 @@ class CrystalGenerator:
     # These attributes are set when prepare() method is called.
     _model: DiffusionLightningModule | None = None
     _cfg: DictConfig | None = None
+
+    # can be use to monitor progress of generation
+    progress_callback: ProgressCallback | None = None
 
     def __post_init__(self) -> None:
         assert self.num_atoms_distribution in NUM_ATOMS_DISTRIBUTIONS, (
@@ -374,6 +386,7 @@ class CrystalGenerator:
             output_path=Path(output_dir),
             properties_to_condition_on=self.properties_to_condition_on,
             record_trajectories=self.record_trajectories,
+            progress_callback=self.progress_callback,
         )
 
         return generated_structures

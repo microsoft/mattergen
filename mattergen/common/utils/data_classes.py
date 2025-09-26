@@ -2,6 +2,7 @@
 # Licensed under the MIT License.
 
 import fnmatch
+from importlib import abc
 import os
 from dataclasses import asdict, dataclass, field
 from functools import cached_property
@@ -154,3 +155,9 @@ class MatterGenCheckpointInfo:
             raise ValueError(f"Unrecognized load_epoch {self.load_epoch}")
         ckpt = ckpts[ckpt_ix]
         return ckpt
+
+
+class ProgressCallback(abc.ABC):
+    @abc.abstractmethod
+    def __call__(self, progress: float):
+        pass
