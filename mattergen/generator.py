@@ -208,7 +208,7 @@ class CrystalGenerator:
     _model: DiffusionLightningModule | None = None
     _cfg: DictConfig | None = None
 
-    # can be use to monitor progress of generation
+    # can be used to monitor progress of generation
     progress_callback: ProgressCallback | None = None
 
     def __post_init__(self) -> None:

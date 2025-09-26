@@ -2,7 +2,6 @@
 # Licensed under the MIT License.
 
 import fnmatch
-from importlib import abc
 import os
 from dataclasses import asdict, dataclass, field
 from functools import cached_property
@@ -159,4 +158,9 @@ class MatterGenCheckpointInfo:
 
 class ProgressCallback(Protocol):
     def __call__(self, progress: float):
+        """Callback which can be used to report progress on long-running inference.
+        
+        Args:
+            progress: Float between 0 and 1.
+        """
         pass
