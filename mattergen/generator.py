@@ -32,7 +32,7 @@ from mattergen.common.utils.eval_utils import (
 from mattergen.common.utils.globals import DEFAULT_SAMPLING_CONFIG_PATH, get_device
 from mattergen.diffusion.lightning_module import DiffusionLightningModule
 from mattergen.diffusion.sampling.pc_sampler import PredictorCorrector
-from materials.common.utils.data_classes import ProgressCallback
+from mattergen.common.utils.data_classes import ProgressCallback
 
 
 def draw_samples_from_sampler(

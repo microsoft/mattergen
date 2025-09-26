@@ -7,7 +7,7 @@ import os
 from dataclasses import asdict, dataclass, field
 from functools import cached_property
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, Protocol
 
 import numpy as np
 from huggingface_hub import hf_hub_download
@@ -157,7 +157,6 @@ class MatterGenCheckpointInfo:
         return ckpt
 
 
-class ProgressCallback(abc.ABC):
-    @abc.abstractmethod
+class ProgressCallback(Protocol):
     def __call__(self, progress: float):
         pass
