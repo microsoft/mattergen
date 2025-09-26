@@ -47,7 +47,7 @@ def main(
         strict_checkpoint_loading: Whether to raise an exception when not all parameters from the checkpoint can be matched to the model.
         target_compositions: List of dictionaries with target compositions to condition on. Each dictionary should have the form `{element: number_of_atoms}`. If None, the target compositions are not conditioned on.
            Only supported for models trained for crystal structure prediction (CSP) (default: None)
-        callback: Optional callback function that takes in a single float argument representing the progress of the generation process (between 0 and 1).
+        progress_callback: Optional callback function that takes in a single float argument representing the progress of the generation process (between 0 and 1).
     NOTE: When specifying dictionary values via the CLI, make sure there is no whitespace between the key and value, e.g., `--properties_to_condition_on={key1:value1}`.
     """
     assert (
