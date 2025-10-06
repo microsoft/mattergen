@@ -42,7 +42,8 @@ classifiers = [
 ]
 
 dependencies = [
-"ase>=3.22.1",
+"azureml-inference-server-http",
+"ase<=3.25.0",
 "autopep8",
 "cachetools",
 "contextlib2",
