@@ -58,17 +58,18 @@ class MetricsEvaluator:
         assert len(capabilities) > 0, "At least one capability is required."
         self.capabilities = capabilities
 
-        self._metrics: dict[
-            Type[BaseMetric], BaseMetric
-        ] = {}  # use to cache previously instantiated metrics
+        self._metrics: dict[Type[BaseMetric], BaseMetric] = (
+            {}
+        )  # use to cache previously instantiated metrics
 
     @classmethod
     def from_structures(
         cls,
         structures: list[Structure],
         reference: ReferenceDataset | None = None,
-        structure_matcher: OrderedStructureMatcher
-        | DisorderedStructureMatcher = DefaultDisorderedStructureMatcher(),
+        structure_matcher: (
+            OrderedStructureMatcher | DisorderedStructureMatcher
+        ) = DefaultDisorderedStructureMatcher(),
         n_failed_jobs: int = 0,
     ) -> Self:
         """Instantiate MetricsEvaluator from a list of structures. This is useful for computing structure-based metrics."""
@@ -96,8 +97,9 @@ class MetricsEvaluator:
         property_constraints: dict[str, PropertyConstraint] | None = None,
         original_structures: list[Structure] | None = None,
         stability_threshold: float = DEFAULT_STABILITY_THRESHOLD,
-        structure_matcher: OrderedStructureMatcher
-        | DisorderedStructureMatcher = DefaultDisorderedStructureMatcher(),
+        structure_matcher: (
+            OrderedStructureMatcher | DisorderedStructureMatcher
+        ) = DefaultDisorderedStructureMatcher(),
         energy_correction_scheme: Compatibility = MaterialsProject2020Compatibility(),
         n_failed_jobs: int = 0,
     ) -> Self:
@@ -130,8 +132,9 @@ class MetricsEvaluator:
         reference: ReferenceDataset | None = None,
         stability_threshold: float = DEFAULT_STABILITY_THRESHOLD,
         property_constraints: dict[str, PropertyConstraint] | None = None,
-        structure_matcher: OrderedStructureMatcher
-        | DisorderedStructureMatcher = DefaultDisorderedStructureMatcher(),
+        structure_matcher: (
+            OrderedStructureMatcher | DisorderedStructureMatcher
+        ) = DefaultDisorderedStructureMatcher(),
         n_failed_jobs: int = 0,
     ) -> Self:
 

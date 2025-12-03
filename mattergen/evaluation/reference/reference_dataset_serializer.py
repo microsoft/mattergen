@@ -34,8 +34,13 @@ def gzip_compress(file_path: str | os.PathLike, output_dir: str | os.PathLike) -
 def gzip_decompress(gzip_file_path: str | os.PathLike, output_dir: str | os.PathLike) -> Path:
     """Decompresses a gzipped file. Returns the decompressed file path."""
     output_path = Path(output_dir) / Path(gzip_file_path).name[:-3]  # remove .gz
+    if output_path.exists():
+        print(f"File {output_path} already exists. Skipping decompression.")
+        return output_path
+
     with gzip.open(gzip_file_path, "rb") as fin:
         with open(output_path, "wb") as fout:
+            print(output_path)
             fout.write(fin.read())
     return output_path
 
@@ -44,7 +49,7 @@ class LmdbNotFoundError(Exception):
     pass
 
 
-class LMDBGZSerializer():
+class LMDBGZSerializer:
     def __init__(
         self,
     ):
@@ -100,6 +105,8 @@ class LMDBGZSerializer():
     def deserialize(self, dataset_path: str | os.PathLike) -> ReferenceDataset:
         """Reads a dataset from a file using the gzip-compressed LMDB format."""
         tempdir = mkdtemp()
+        tempdir = "/tmp/lmdb_temp_dir"
+        os.makedirs(tempdir, exist_ok=True)
         lmdb_path = gzip_decompress(dataset_path, tempdir)
         name = lmdb_read_metadata(lmdb_path, "name")
         return ReferenceDataset(

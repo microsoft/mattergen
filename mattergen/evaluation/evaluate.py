@@ -26,6 +26,7 @@ def evaluate(
     potential_load_path: str | None = None,
     device: str = str(get_device()),
     structures_output_path: str | None = None,
+    **kwargs,
 ) -> dict[str, float | int]:
     """Evaluate the structures against a reference dataset.
 
@@ -47,7 +48,11 @@ def evaluate(
         raise ValueError("Cannot accept energies if relax is True.")
     if relax:
         relaxed_structures, energies = relax_structures(
-            structures, device=device, potential_load_path=potential_load_path, output_path=structures_output_path
+            structures,
+            device=device,
+            potential_load_path=potential_load_path,
+            output_path=structures_output_path,
+            **kwargs,
         )
     else:
         relaxed_structures = structures
@@ -58,8 +63,4 @@ def evaluate(
         reference=reference,
         structure_matcher=structure_matcher,
     )
-    return evaluator.compute_metrics(
-        metrics=evaluator.available_metrics,
-        save_as=save_as,
-        pretty_print=True,
-    )
+    return evaluator.as_dataframe(metrics=evaluator.available_metrics)
