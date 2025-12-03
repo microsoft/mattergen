@@ -1,0 +1,5 @@
+*.npy filter=lfs diff=lfs merge=lfs -text
+*.extxyz filter=lfs diff=lfs merge=lfs -text
+*.csv filter=lfs diff=lfs merge=lfs -text
+*.ckpt filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text
