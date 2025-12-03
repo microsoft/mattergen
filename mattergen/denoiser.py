@@ -280,3 +280,56 @@ class GemNetTDenoiser(ScoreModel):
         condition on.
         """
         return list(self.property_embeddings)
+
+    def calc_embeddings(self, x: ChemGraph, t: torch.Tensor):
+        """
+        args:
+            x: tuple containing:
+                frac_coords: (N_atoms, 3)
+                lattice: (N_cryst, 3, 3)
+                atom_types: (N_atoms, ), need to use atomic number e.g. H = 1 or ion state
+                num_atoms: (N_cryst,)
+                batch: (N_atoms,)
+            t: (N_cryst,): timestep per crystal
+        returns:
+            tuple of:
+                predicted epsilon: (N_atoms, 3)
+                lattice update: (N_crystals, 3, 3)
+                predicted atom types: (N_atoms, MAX_ATOMIC_NUM)
+        """
+        (frac_coords, lattice, atom_types, num_atoms, batch) = (
+            x["pos"],
+            x["cell"],
+            x["atomic_numbers"],
+            x["num_atoms"],
+            x.get_batch_idx("pos"),
+        )
+
+        # (num_atoms, hidden_dim) (num_crysts, 3)
+        t_enc = self.noise_level_encoding(t).to(lattice.device)
+        z_per_crystal = t_enc
+
+        # evaluate property embedding values
+        property_embedding_values = get_property_embeddings(
+            batch=x, property_embeddings=self.property_embeddings
+        )
+
+        if len(property_embedding_values) > 0:
+            z_per_crystal = torch.cat([z_per_crystal, property_embedding_values], dim=-1)
+
+        output = self.gemnet(
+            z=z_per_crystal,
+            frac_coords=frac_coords,
+            atom_types=atom_types,
+            num_atoms=num_atoms,
+            batch=batch,
+            lengths=None,
+            angles=None,
+            lattice=lattice,
+            # we construct the graph on the fly, hence pass None for these:
+            edge_index=None,
+            to_jimages=None,
+            num_bonds=None,
+        )
+
+        return output

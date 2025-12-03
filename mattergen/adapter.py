@@ -132,3 +132,71 @@ class GemNetTAdapter(GemNetTDenoiser):
         condition on.
         """
         return list(self.property_embeddings) + list(self.property_embeddings_adapt)
+
+    def calc_embeddings(
+        self,
+        x: ChemGraph,
+        t: torch.Tensor,
+    ):
+        """
+        augment <z_per_crystal> with <self.condition_embs_adapt>.
+        """
+        (
+            frac_coords,
+            lattice,
+            atom_types,
+            num_atoms,
+            batch,
+        ) = (
+            x["pos"],
+            x["cell"],
+            x["atomic_numbers"],
+            x["num_atoms"],
+            x.get_batch_idx("pos"),
+        )
+        # (num_atoms, hidden_dim) (num_crysts, 3)
+        t_enc = self.noise_level_encoding(t).to(lattice.device)
+        z_per_crystal = t_enc
+
+        # shape = (Nbatch, sum(hidden_dim of all properties in condition_on_adapt))
+        conditions_base_model: torch.Tensor = get_property_embeddings(
+            property_embeddings=self.property_embeddings, batch=x
+        )
+
+        if len(conditions_base_model) > 0:
+            z_per_crystal = torch.cat([z_per_crystal, conditions_base_model], dim=-1)
+
+        # compose into a dict
+        conditions_adapt_dict = {}
+        conditions_adapt_mask_dict = {}
+        for cond_field, property_embedding in self.property_embeddings_adapt.items():
+            conditions_adapt_dict[cond_field] = property_embedding.forward(batch=x)
+            try:
+                conditions_adapt_mask_dict[cond_field] = get_use_unconditional_embedding(
+                    batch=x, cond_field=cond_field
+                )
+            except KeyError:
+                # no values have been provided for the conditional field,
+                # interpret this as the user wanting an unconditional score
+                conditions_adapt_mask_dict[cond_field] = torch.ones_like(
+                    x["num_atoms"], dtype=torch.bool
+                ).reshape(-1, 1)
+
+        output = self.gemnet(
+            z=z_per_crystal,
+            frac_coords=frac_coords,
+            atom_types=atom_types,
+            num_atoms=num_atoms,
+            batch=batch,
+            lengths=None,
+            angles=None,
+            lattice=lattice,
+            # we construct the graph on the fly, hence pass None for these:
+            edge_index=None,
+            to_jimages=None,
+            num_bonds=None,
+            cond_adapt=conditions_adapt_dict,
+            cond_adapt_mask=conditions_adapt_mask_dict,  # when True use unconditional embedding
+        )
+
+        return output
