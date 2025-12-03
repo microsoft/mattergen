@@ -329,6 +329,11 @@ class MetricsEvaluator:
             # by monty.json.
             dumpfn(df.to_dict("list"), save_as)
 
+        try:
+            df["matches_in_reference"] = [self.matches_in_reference.get(i, []) for i in df.index]
+        except Exception:
+            pass
+
         return df
 
     T = TypeVar("T")
