@@ -350,6 +350,36 @@ class SpaceGroupEmbeddingVector(BaseUnconditionalEmbeddingModule):
         return self.embedding(x.long() - 1)
 
 
+class TopologyCategoryEmbeddingVector(BaseUnconditionalEmbeddingModule):
+    only_depends_on_shape_of_input: bool = True
+
+    def __init__(self, hidden_dim: int):
+        super().__init__()
+        # a vector of learnable parameters of shape (hidden_dim,)
+        self.embedding = torch.nn.Embedding(5, hidden_dim)
+        self.hidden_dim = hidden_dim
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        topology_category_tensor = x.long()
+
+        return self.embedding(topology_category_tensor)
+
+
+class TopologicalEmbeddingVector(BaseUnconditionalEmbeddingModule):
+    only_depends_on_shape_of_input: bool = True
+
+    def __init__(self, hidden_dim: int):
+        super().__init__()
+        # a vector of learnable parameters of shape (hidden_dim,)
+        self.embedding = torch.nn.Embedding(2, hidden_dim)
+        self.hidden_dim = hidden_dim
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        topological_tensor = x.long()
+
+        return self.embedding(topological_tensor)
+
+
 class ZerosEmbedding(BaseUnconditionalEmbeddingModule):
     """
     Return a [n_crystals_in_batch, self.hidden_dim] tensor of zeros. This is helpfuln as the unconditional embedding

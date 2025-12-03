@@ -50,6 +50,8 @@ PROPERTY_SOURCE_IDS = [
     "ml_bulk_modulus",
     "chemical_system",
     "dft_band_gap",
+    "topological",
+    "topology_category",
 ]
 
 SELECTED_ATOMIC_NUMBERS = [
