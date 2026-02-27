@@ -26,6 +26,7 @@ def main(
     energies_path: str | None = None,
     structure_matcher: Literal["ordered", "disordered"] = "disordered",
     save_as: str | None = None,
+    save_detailed_as: str | None = None,
     potential_load_path: (
         Literal["MatterSim-v1.0.0-1M.pth", "MatterSim-v1.0.0-5M.pth"] | None
     ) = None,
@@ -57,6 +58,7 @@ def main(
         energies=energies,
         structure_matcher=structure_matcher,
         save_as=save_as,
+        save_detailed_as=save_detailed_as,
         potential_load_path=potential_load_path,
         reference=reference,
         device=device,

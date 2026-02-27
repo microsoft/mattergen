@@ -24,6 +24,7 @@ def evaluate(
         OrderedStructureMatcher | DisorderedStructureMatcher
     ) = DefaultDisorderedStructureMatcher(),
     save_as: str | None = None,
+    save_detailed_as: str | None = None,
     potential_load_path: str | None = None,
     device: str = str(get_device()),
     structures_output_path: str | None = None,
@@ -38,6 +39,7 @@ def evaluate(
         reference: Reference dataset. If this is None, the default reference dataset will be used.
         structure_matcher: Structure matcher to use for matching the structures.
         save_as: Save the metrics as a JSON file.
+        save_detailed_as: Save per-structure metrics (e.g., energy_above_hull_per_atom) as a JSON file.
         potential_load_path: Path to the Machine Learning potential to use for relaxation.
         device: Device to use for relaxation.
         structures_output_path: Path to save the relaxed structures.
@@ -62,8 +64,14 @@ def evaluate(
         structure_matcher=structure_matcher,
         energy_correction_scheme=energy_correction_scheme
     )
-    return evaluator.compute_metrics(
+    metrics = evaluator.compute_metrics(
         metrics=evaluator.available_metrics,
         save_as=save_as,
         pretty_print=True,
     )
+    if save_detailed_as is not None:
+        evaluator.as_dataframe(
+            metrics=evaluator.available_metrics,
+            save_as=save_detailed_as,
+        )
+    return metrics
