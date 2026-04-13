@@ -3,14 +3,13 @@
 
 import gzip
 import os
-import pickle
 import shutil
 import weakref
 from collections import defaultdict
 from functools import cached_property
 from pathlib import Path
 from tempfile import mkdtemp
-from typing import Any, DefaultDict, Iterator, Mapping
+from typing import DefaultDict, Iterator, Mapping
 
 import lmdb  # type: ignore [import]
 from monty.json import MontyDecoder

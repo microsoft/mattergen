@@ -16,7 +16,6 @@ from pandas import DataFrame
 from pymatgen.core.composition import Element
 from pymatgen.core.structure import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from scipy.stats import wasserstein_distance
 from smact.screening import pauling_test
 from tqdm import tqdm
 

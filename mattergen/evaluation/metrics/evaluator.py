@@ -7,7 +7,7 @@ from collections.abc import Iterable, Sequence
 from functools import cached_property
 from inspect import getmembers, isclass
 from pathlib import Path
-from typing import Literal, Sequence, Type, TypeVar
+from typing import Literal, Type, TypeVar
 
 import numpy.typing
 import pandas as pd

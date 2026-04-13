@@ -5,8 +5,8 @@ from typing import Callable
 
 import torch
 
-from mattergen.diffusion.sampling.pc_sampler import Diffusable, PredictorCorrector
 from mattergen.common.data.collate import collate
+from mattergen.diffusion.sampling.pc_sampler import Diffusable, PredictorCorrector
 
 BatchTransform = Callable[[Diffusable], Diffusable]
 

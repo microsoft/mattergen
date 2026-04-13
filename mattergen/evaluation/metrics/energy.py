@@ -9,12 +9,10 @@ import numpy as np
 import numpy.typing
 from pandas import DataFrame
 from pymatgen.analysis.phase_diagram import PhaseDiagram
-from pymatgen.entries.compatibility import MaterialsProject2020Compatibility
 from tqdm import tqdm
 
 from mattergen.evaluation.metrics.core import BaseAggregateMetric, BaseMetric, BaseMetricsCapability
 from mattergen.evaluation.metrics.structure import StructureMetricsCapability
-from mattergen.evaluation.reference.correction_schemes import TRI110Compatibility2024
 from mattergen.evaluation.reference.reference_dataset import ReferenceDataset
 from mattergen.evaluation.utils.globals import DEFAULT_STABILITY_THRESHOLD
 from mattergen.evaluation.utils.logging import logger

@@ -9,7 +9,6 @@ from zipfile import ZipFile
 
 import ase.io
 import hydra
-import torch
 from hydra.utils import instantiate
 from omegaconf import DictConfig, OmegaConf
 from pymatgen.core.structure import Structure
@@ -21,6 +20,7 @@ from mattergen.common.data.collate import collate
 from mattergen.common.data.condition_factory import ConditionLoader
 from mattergen.common.data.num_atoms_distribution import NUM_ATOMS_DISTRIBUTIONS
 from mattergen.common.data.types import TargetProperty
+from mattergen.common.utils.data_classes import ProgressCallback
 from mattergen.common.utils.data_utils import lattice_matrix_to_params_torch
 from mattergen.common.utils.eval_utils import (
     MatterGenCheckpointInfo,
@@ -32,7 +32,6 @@ from mattergen.common.utils.eval_utils import (
 from mattergen.common.utils.globals import DEFAULT_SAMPLING_CONFIG_PATH, get_device
 from mattergen.diffusion.lightning_module import DiffusionLightningModule
 from mattergen.diffusion.sampling.pc_sampler import PredictorCorrector
-from mattergen.common.utils.data_classes import ProgressCallback
 
 
 def draw_samples_from_sampler(

@@ -11,6 +11,7 @@ from tqdm.auto import tqdm
 
 from mattergen.denoiser import GemNetTDenoiser
 from mattergen.diffusion.lightning_module import DiffusionLightningModule
+
 TensorOrStringType = TypeVar("TensorOrStringType", torch.Tensor, list[str])
 
 
@@ -37,7 +38,7 @@ class SetPropertyScalers(Callback):
         property_names = [p.name for p in property_embeddings.values() if not isinstance(p.scaler, torch.nn.Identity)]
         if len(property_names) == 0:
             return
-        for batch in tqdm(datamodule.train_dataloader(), desc=f"Fitting property scalers"):
+        for batch in tqdm(datamodule.train_dataloader(), desc="Fitting property scalers"):
             for property_name in property_names:
                 # concat all values in train dataset for this given property
                 property_values[property_name].append(batch[property_name])
