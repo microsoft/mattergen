@@ -13,8 +13,8 @@ jobs:
   dependency-submission:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.10.12' 
       - name: generate requirements.txt
@@ -33,4 +33,4 @@ jobs:
           sed -i 's|torchaudio==2.2.1+cu118|torchaudio @ https://download.pytorch.org/whl/cu118/torchaudio-2.2.1%2Bcu118-cp310-cp310-linux_x86_64.whl#sha256=734db8030b3c5ff6bb4135b0d0a9eec79690900c5b5edd259f230b02d6fbcb04|g' requirements.txt
           sed -i 's|torchvision==0.17.1+cu118|torchvision @ https://download.pytorch.org/whl/cu118/torchvision-0.17.1%2Bcu118-cp310-cp310-linux_x86_64.whl#sha256=dfe27be6328d85300ba9c2f3862993841c41a0daa4b4ba99c22e9fd509a21e2f|g' requirements.txt
       - name: Component detection 
-        uses: advanced-security/component-detection-dependency-submission-action@v0.0.4
+        uses: advanced-security/component-detection-dependency-submission-action@bcc5ca88e364e548ea6b6db45f9c298161e76911 # v0.0.4
