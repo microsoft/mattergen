@@ -5,8 +5,6 @@ from typing import Protocol
 
 import torch
 
-from mattergen.diffusion.corruption.sde_lib import SDE
-
 
 class TimestepSampler(Protocol):
     min_t: float

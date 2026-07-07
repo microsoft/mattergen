@@ -4,7 +4,6 @@
 import warnings
 from typing import Any, Callable, Iterable, Iterator, Sequence, TypeVar, overload
 
-
 from torch import Tensor
 from torch_geometric.data import Batch, Data
 from typing_extensions import TypeGuard

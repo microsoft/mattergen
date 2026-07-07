@@ -5,7 +5,7 @@ from typing import Literal, Optional
 
 import torch
 
-from mattergen.diffusion.corruption.sde_lib import SDE, maybe_expand
+from mattergen.diffusion.corruption.sde_lib import SDE
 from mattergen.diffusion.data.batched_data import BatchedData
 from mattergen.diffusion.training.field_loss import aggregate_per_sample
 

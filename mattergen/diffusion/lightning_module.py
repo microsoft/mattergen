@@ -3,10 +3,8 @@
 
 from __future__ import annotations
 
-from collections import deque
 from typing import Any, Dict, Generic, Optional, Protocol, Sequence, TypeVar, Union
 
-import numpy as np
 import pytorch_lightning as pl
 import torch
 from hydra.errors import InstantiationException
@@ -14,7 +12,6 @@ from hydra.utils import instantiate
 from omegaconf import DictConfig
 from pytorch_lightning.utilities.types import STEP_OUTPUT
 from torch.optim import AdamW, Optimizer
-from tqdm import tqdm
 
 from mattergen.diffusion.config import Config
 from mattergen.diffusion.data.batched_data import BatchedData
