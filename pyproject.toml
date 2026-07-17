@@ -68,7 +68,7 @@ dependencies = [
 "setuptools<81",
 "SMACT",
 "sympy>=1.11.1",
-"torch==2.2.1+cu118; sys_platform == 'linux'", 
+"torch==2.13.0; sys_platform == 'linux'", 
 "torchvision==0.17.1+cu118; sys_platform == 'linux'",
 "torchaudio==2.2.1+cu118; sys_platform == 'linux'",
 "torch==2.4.1; sys_platform == 'darwin'",
