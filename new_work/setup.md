@@ -59,3 +59,8 @@ python new_work/predictive_model_code/training.py
 ## Run inference with predictor
 ```bash
 python new_work/predictive_model_code/predict.py
+```
+
+## Additional evaluations / scripts
+
+Additional scripts with experimental code, such as phonon evalutation, or older/simplified versions, e.g. visualizations, may be found in this repo and can be regarded as additional resources kept for convenience.
