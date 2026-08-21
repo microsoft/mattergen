@@ -80,7 +80,10 @@ class TRI110Compatibility2024(Compatibility):
             # energy adjustments are applied additively in downstram pymatgen code, so
             # refactor multiplicate factor as an addition to uncorrected energy
             adjustments.append(
-                EnergyAdjustment(value=entry.energy * (self.PBE_CORRECTION - 1.0), name="TRI110PBE")
+                EnergyAdjustment(
+                    value=entry.uncorrected_energy * (self.PBE_CORRECTION - 1.0),
+                    name="TRI110PBE",
+                )
             )
 
         if entry.parameters.get("run_type") == "GGA+U":
