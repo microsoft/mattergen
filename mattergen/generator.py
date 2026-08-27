@@ -121,21 +121,16 @@ def dump_trajectories(
     output_path: Path,
     all_trajs_list: list[list[ChemGraph]],
 ) -> None:
-    try:
-        # We gather all trajectories in a single zip file as .extxyz files.
-        # This way we can view them easily after downloading.
-        with ZipFile(output_path / "generated_trajectories.zip", "w") as zip_obj:
-            for ix, traj in enumerate(all_trajs_list):
-                strucs = structures_from_trajectory(traj)
-                ase_atoms = [AseAtomsAdaptor.get_atoms(crystal) for crystal in strucs]
-                str_io = io.StringIO()
-                ase.io.write(str_io, ase_atoms, format="extxyz")
-                str_io.flush()
-                zip_obj.writestr(f"gen_{ix}.extxyz", str_io.getvalue())
-    except IOError as e:
-        print(f"Got error {e} writing the trajectory to disk.")
-    except ValueError as e:
-        print(f"Got error ValueError '{e}' writing the trajectory to disk.")
+    # We gather all trajectories in a single zip file as .extxyz files.
+    # This way we can view them easily after downloading.
+    with ZipFile(output_path / "generated_trajectories.zip", "w") as zip_obj:
+        for ix, traj in enumerate(all_trajs_list):
+            strucs = structures_from_trajectory(traj)
+            ase_atoms = [AseAtomsAdaptor.get_atoms(crystal) for crystal in strucs]
+            str_io = io.StringIO()
+            ase.io.write(str_io, ase_atoms, format="extxyz")
+            str_io.flush()
+            zip_obj.writestr(f"gen_{ix}.extxyz", str_io.getvalue())
 
 
 def structure_from_model_output(

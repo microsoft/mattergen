@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+import io
 import logging
 import os
 from pathlib import Path
@@ -111,15 +112,13 @@ def save_structures(output_path: Path, structures: Sequence[Structure]) -> None:
         structures: sequence of structures.
     """
     ase_atoms = [AseAtomsAdaptor.get_atoms(x) for x in structures]
-    try:
-        ase.io.write(output_path / GENERATED_CRYSTALS_EXTXYZ_FILE_NAME, ase_atoms)
+    ase.io.write(output_path / GENERATED_CRYSTALS_EXTXYZ_FILE_NAME, ase_atoms)
 
-        with ZipFile(output_path / GENERATED_CRYSTALS_ZIP_FILE_NAME, "w") as zip_obj:
-            for ix, ase_atom in enumerate(ase_atoms):
-                ase.io.write(f"/tmp/gen_{ix}.cif", ase_atom, format="cif")
-                zip_obj.write(f"/tmp/gen_{ix}.cif", arcname=f"gen_{ix}.cif")
-    except IOError as e:
-        print(f"Got error {e} writing the generated structures to disk.")
+    with ZipFile(output_path / GENERATED_CRYSTALS_ZIP_FILE_NAME, "w") as zip_obj:
+        for ix, ase_atom in enumerate(ase_atoms):
+            cif = io.BytesIO()
+            ase.io.write(cif, ase_atom, format="cif")
+            zip_obj.writestr(f"gen_{ix}.cif", cif.getvalue())
 
 
 def load_structures(input_path: Path) -> Sequence[Structure]:
