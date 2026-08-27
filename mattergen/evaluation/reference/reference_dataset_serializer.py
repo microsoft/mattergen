@@ -136,7 +136,7 @@ class LMDBBackedReferenceDatasetImpl(ReferenceDatasetImpl):
         """
         self.env = lmdb_open(lmdb_path, readonly=True)
         self.num_entries_by_chemsys_reduced_formulas = (
-            self._build_num_entries_by_chemsys_reduced_formulas(lmdb_path)
+            self._build_num_entries_by_chemsys_reduced_formulas()
         )
         self.total_num_entries = sum(
             sum(d.values()) for d in self.num_entries_by_chemsys_reduced_formulas.values()
@@ -144,14 +144,12 @@ class LMDBBackedReferenceDatasetImpl(ReferenceDatasetImpl):
         # close the LMDB environment when this object is garbage collected
         weakref.finalize(self, self._cleanup, self.env, cleanup_dir)
 
-    def _build_num_entries_by_chemsys_reduced_formulas(
-        self, lmdb_path: Path
-    ) -> dict[str, dict[str, int]]:
-        chemical_systems = lmdb_read_metadata(lmdb_path, "chemical_systems")
+    def _build_num_entries_by_chemsys_reduced_formulas(self) -> dict[str, dict[str, int]]:        
         result: defaultdict[str, dict[str, int]] = defaultdict(dict)
         with self.env.begin() as txn:
+            chemical_systems = lmdb_get(txn, "chemical_systems")
             for chemsys in chemical_systems:
-                reduced_formulas = lmdb_read_metadata(lmdb_path, f"{chemsys}.reduced_formulas")
+                reduced_formulas = lmdb_get(txn, f"{chemsys}.reduced_formulas")
                 for reduced_formula in reduced_formulas:
                     result[chemsys][reduced_formula] = lmdb_get(
                         txn, f"{chemsys}.{reduced_formula}.length"
