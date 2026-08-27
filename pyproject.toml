@@ -49,7 +49,7 @@ dependencies = [
 "emmet-core>=0.84.2",  # keep up-to-date together with pymatgen, atomate2
 "fire", # see https://github.com/google/python-fire
 "huggingface-hub",
-"hydra-core==1.3.1",
+"hydra-core==1.3.4",
 "hydra-joblib-launcher==1.1.5",
 "jupyterlab>=4.2.5",
 "lmdb",
