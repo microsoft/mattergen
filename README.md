@@ -126,14 +126,13 @@ mattergen-generate $RESULTS_PATH --pretrained-name=$MODEL_NAME --batch_size=16 -
 
 Once you have generated a list of structures contained in `$RESULTS_PATH` (either using MatterGen or another method), you can relax the structures using the default MatterSim machine learning force field (see [repository](https://github.com/microsoft/mattersim)) and compute novelty, uniqueness, stability (using energy estimated by MatterSim), and other metrics via the following command:
 ```bash
-git lfs pull -I data-release/alex-mp/reference_MP2020correction.gz --exclude=""  # first download the MP2020 reference dataset from Git LFS
 mattergen-evaluate --structures_path=$RESULTS_PATH --relax=True --structure_matcher='disordered' --save_as="$RESULTS_PATH/metrics.json"
 ```
+The default MP2020 reference dataset is downloaded from Hugging Face on first use and reused from the local cache.
 
 If you want to use the reference dataset while applying the TRI2024 correction scheme (recommended), instead run the following:
 ```bash
-git lfs pull -I data-release/alex-mp/reference_TRI2024correction.gz --exclude=""  # ownload the TRI2024 reference datasets
-mattergen-evaluate --structures_path=$RESULTS_PATH --relax=True --structure_matcher='disordered' --save_as="$RESULTS_PATH/metrics.json" --reference_dataset_path="data-release/alex-mp/reference_TRI2024correction.gz"
+mattergen-evaluate --structures_path=$RESULTS_PATH --relax=True --structure_matcher='disordered' --save_as="$RESULTS_PATH/metrics.json" --energy_correction_scheme="TRI2024"
 ```
 
 This script will write `metrics.json` containing the metric results to `$RESULTS_PATH` and will print it to your console.
@@ -146,7 +145,6 @@ This script will write `metrics.json` containing the metric results to `$RESULTS
 
 If, instead, you have relaxed the structures and obtained the relaxed total energies via another mean (e.g., DFT), you can evaluate the metrics via:
 ```bash
-git lfs pull -I data-release/alex-mp/reference_MP2020correction.gz --exclude=""  # first download the reference dataset from Git LFS
 mattergen-evaluate --structures_path=$RESULTS_PATH --energies_path='energies.npy' --relax=False --structure_matcher='disordered' --save_as='metrics'
 ```
 This script will try to read structures from disk in the following precedence order:
@@ -159,8 +157,7 @@ Here, we expect `energies.npy` to be a numpy array with the entries being `float
 > [!IMPORTANT]
 > For any task beyond benchmarking against existing literature, we recommend using the TRI2024 correction scheme and reference dataset. To do so, run:
 ```bash
-git lfs pull -I data-release/alex-mp/reference_TRI2024correction.gz --exclude=""  # first download the reference dataset from Git LFS
-mattergen-evaluate --structures_path=$RESULTS_PATH --energies_path='energies.npy' --relax=False --structure_matcher='disordered' --save_as='metrics' --energy_correction_scheme="TRI2024" --reference_dataset_path="data-release/alex-mp/reference_TRI2024correction.gz" 
+mattergen-evaluate --structures_path=$RESULTS_PATH --energies_path='energies.npy' --relax=False --structure_matcher='disordered' --save_as='metrics' --energy_correction_scheme="TRI2024"
 ```
 
 If you want to save the relaxed structures, toghether with their energies, forces, and stresses, add `--structures_output_path=YOUR_PATH` to the script call, like so:

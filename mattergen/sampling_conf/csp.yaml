@@ -2,7 +2,7 @@ sampler_partial:
   _target_: mattergen.diffusion.sampling.classifier_free_guidance.GuidedPredictorCorrector.from_pl_module
   N: 1000
   eps_t: ${eval:'1/${.N}'}
-  
+
   _partial_: true
   guidance_scale: 0.0
   remove_conditioning_fn:
@@ -10,7 +10,7 @@ sampler_partial:
   keep_conditioning_fn:
     _target_: mattergen.property_embeddings.SetConditionalEmbeddingType
   predictor_partials:
-    pos: 
+    pos:
       _target_: mattergen.diffusion.wrapped.wrapped_predictors_correctors.WrappedAncestralSamplingPredictor
       _partial_: true
     cell:
@@ -18,12 +18,12 @@ sampler_partial:
       _partial_: true
 
   corrector_partials:
-    pos: 
+    pos:
       _target_: mattergen.diffusion.wrapped.wrapped_predictors_correctors.WrappedLangevinCorrector
       _partial_: true
       max_step_size: 1e6
       snr: 0.4
-    cell: 
+    cell:
       _target_: mattergen.common.diffusion.predictors_correctors.LatticeLangevinDiffCorrector
       _partial_: true
       max_step_size: 1e6
