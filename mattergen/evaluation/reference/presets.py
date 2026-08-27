@@ -4,8 +4,35 @@
 from functools import cached_property
 from pathlib import Path
 
+from huggingface_hub import hf_hub_download
+
 from mattergen.evaluation.reference.reference_dataset import ReferenceDataset
 from mattergen.evaluation.reference.reference_dataset_serializer import LMDBGZSerializer
+
+REFERENCE_REPOSITORY_NAME = "microsoft/mattergen"
+REFERENCE_DATASET_DIRECTORY = "data-release/alex-mp"
+
+
+def _is_gzip_file(path: Path) -> bool:
+    try:
+        with path.open("rb") as stream:
+            return stream.read(2) == b"\x1f\x8b"
+    except OSError:
+        return False
+
+
+def get_reference_dataset_path(filename: str) -> Path:
+    source_checkout_path = (
+        Path(__file__).resolve().parents[3] / REFERENCE_DATASET_DIRECTORY / filename
+    )
+    if _is_gzip_file(source_checkout_path):
+        return source_checkout_path
+    return Path(
+        hf_hub_download(
+            repo_id=REFERENCE_REPOSITORY_NAME,
+            filename=f"{REFERENCE_DATASET_DIRECTORY}/{filename}",
+        )
+    )
 
 
 class ReferenceMP2020Correction(ReferenceDataset):
@@ -20,9 +47,8 @@ class ReferenceMP2020Correction(ReferenceDataset):
 
     @classmethod
     def from_preset(cls) -> "ReferenceMP2020Correction":
-        current_dir = Path(__file__).parent
         return LMDBGZSerializer().deserialize(
-            f"{current_dir}/../../../data-release/alex-mp/reference_MP2020correction.gz"
+            get_reference_dataset_path("reference_MP2020correction.gz")
         )
 
     @cached_property
@@ -43,9 +69,8 @@ class ReferenceTRI2024Correction(ReferenceDataset):
 
     @classmethod
     def from_preset(cls) -> "ReferenceTRI2024Correction":
-        current_dir = Path(__file__).parent
         return LMDBGZSerializer().deserialize(
-            f"{current_dir}/../../../data-release/alex-mp/reference_TRI2024correction.gz"
+            get_reference_dataset_path("reference_TRI2024correction.gz")
         )
 
     @cached_property

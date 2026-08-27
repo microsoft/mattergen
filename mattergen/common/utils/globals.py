@@ -38,7 +38,7 @@ print(f"MODELS_PROJECT_ROOT: {MODELS_PROJECT_ROOT}")
 # Set environment variable PROJECT_ROOT so that hydra / OmegaConf can access it.
 os.environ["PROJECT_ROOT"] = str(MODELS_PROJECT_ROOT)  # for hydra
 
-DEFAULT_SAMPLING_CONFIG_PATH = Path(__file__).resolve().parents[3] / "sampling_conf"
+DEFAULT_SAMPLING_CONFIG_PATH = MODELS_PROJECT_ROOT / "sampling_conf"
 PROPERTY_SOURCE_IDS = [
     "dft_mag_density",
     "dft_bulk_modulus",
