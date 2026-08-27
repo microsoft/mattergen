@@ -3,12 +3,14 @@
 
 import io
 import os
+import random
 from dataclasses import dataclass
 from pathlib import Path
 from zipfile import ZipFile
 
 import ase.io
 import hydra
+import numpy as np
 import torch
 from hydra.utils import instantiate
 from omegaconf import DictConfig, OmegaConf
@@ -33,6 +35,13 @@ from mattergen.common.utils.globals import DEFAULT_SAMPLING_CONFIG_PATH, get_dev
 from mattergen.diffusion.lightning_module import DiffusionLightningModule
 from mattergen.diffusion.sampling.pc_sampler import PredictorCorrector
 from mattergen.common.utils.data_classes import ProgressCallback
+
+
+def seed_all(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
 
 
 def draw_samples_from_sampler(
@@ -203,6 +212,7 @@ class CrystalGenerator:
     sampling_config_name: str = "default"
 
     record_trajectories: bool = True  # store all intermediate samples by default
+    seed: int | None = None
 
     # These attributes are set when prepare() method is called.
     _model: DiffusionLightningModule | None = None
@@ -355,6 +365,9 @@ class CrystalGenerator:
         target_compositions_dict: list[dict[str, float]] | None = None,
         output_dir: str = "outputs",
     ) -> list[Structure]:
+        if self.seed is not None:
+            seed_all(self.seed)
+
         # Prioritize the runtime provided batch_size, num_batches and target_compositions_dict
         batch_size = batch_size or self.batch_size
         num_batches = num_batches or self.num_batches

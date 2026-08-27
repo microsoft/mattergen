@@ -30,6 +30,7 @@ def main(
     strict_checkpoint_loading: bool = True,
     target_compositions: list[dict[str, int]] | None = None,
     progress_callback: ProgressCallback | None = None,
+    seed: int | None = None,
 ) -> list[Structure]:
     """
     Evaluate diffusion model against molecular metrics.
@@ -48,6 +49,7 @@ def main(
         target_compositions: List of dictionaries with target compositions to condition on. Each dictionary should have the form `{element: number_of_atoms}`. If None, the target compositions are not conditioned on.
            Only supported for models trained for crystal structure prediction (CSP) (default: None)
         progress_callback: Optional callback function that takes in a single float argument representing the progress of the generation process (between 0 and 1).
+        seed: Random seed for sampling. Reproducibility is only guaranteed for a fixed software and hardware configuration. If None, the random state is not reset.
     NOTE: When specifying dictionary values via the CLI, make sure there is no whitespace between the key and value, e.g., `--properties_to_condition_on={key1:value1}`.
     """
     assert (
@@ -96,6 +98,7 @@ def main(
         ),
         target_compositions_dict=target_compositions,
         progress_callback=progress_callback,
+        seed=seed,
     )
     return generator.generate(output_dir=Path(output_path))
 

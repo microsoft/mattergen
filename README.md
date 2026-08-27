@@ -89,6 +89,9 @@ export RESULTS_PATH=results/  # Samples will be written to this directory
 # generate batch_size * num_batches samples
 mattergen-generate $RESULTS_PATH --pretrained-name=$MODEL_NAME --batch_size=16 --num_batches 1
 ```
+Pass `--seed=42` to reset the Python, NumPy, and PyTorch random generators before sampling.
+Exact reproducibility is only expected with the same software and hardware configuration because
+some CUDA operations are nondeterministic.
 This script will write the following files into `$RESULTS_PATH`:
 * `generated_crystals_cif.zip`: a ZIP file containing a single `.cif` file per generated structure.
 * `generated_crystals.extxyz`, a single file containing the individual generated structures as frames.
