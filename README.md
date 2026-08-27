@@ -40,6 +40,11 @@ source .venv/bin/activate
 uv pip install -e .
 ```
 
+Alternatively, install the released package from PyPI with the matching pre-built PyTorch Geometric CUDA wheels:
+```bash
+uv pip install mattergen --find-links https://data.pyg.org/whl/torch-2.2.0+cu121.html
+```
+
 Note that our datasets and model checkpoints are provided inside this repo via [Git Large File Storage (LFS)](https://git-lfs.com/).
 To find out whether LFS is installed on your machine, run
 ```bash
