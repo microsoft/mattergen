@@ -21,7 +21,6 @@ adapter:
       num_targets: 1
       otf_graph: true
       regress_stress: true
-      scale_file: /scratch/amlt_code/mattergen/common/gemnet/gemnet-dT.json
     hidden_dim: 512
     property_embeddings: {}
     property_embeddings_adapt:
@@ -152,7 +151,6 @@ lightning_module:
         num_targets: 1
         otf_graph: true
         regress_stress: true
-        scale_file: /scratch/amlt_code/mattergen/common/gemnet/gemnet-dT.json
       hidden_dim: 512
       property_embeddings: {}
       property_embeddings_adapt:

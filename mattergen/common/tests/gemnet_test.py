@@ -20,7 +20,6 @@ from mattergen.common.utils.data_utils import (
     lattice_params_to_matrix_torch,
 )
 from mattergen.common.utils.eval_utils import make_structure
-from mattergen.common.utils.globals import MODELS_PROJECT_ROOT
 
 ### UTILS ###
 
@@ -37,7 +36,6 @@ def get_model(**kwargs) -> GemNetT:
         emb_size_trip=4,
         emb_size_bil_trip=4,
         otf_graph=True,
-        scale_file=f"{MODELS_PROJECT_ROOT}/common/gemnet/gemnet-dT.json",
         **kwargs,
     )
 
