@@ -5,7 +5,9 @@ Licensed under the MIT License.
 Adapted from https://github.com/FAIR-Chem/fairchem/blob/main/src/fairchem/core/models/gemnet/gemnet.py.
 """
 
+import warnings
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional, Tuple
 
 # import numpy as np
@@ -36,6 +38,23 @@ from mattergen.common.utils.data_utils import (
 )
 from mattergen.common.utils.globals import MODELS_PROJECT_ROOT, get_device, get_pyg_device
 from mattergen.common.utils.lattice_score import edge_score_to_lattice_score_frac_symmetric
+
+DEFAULT_SCALE_FILE = MODELS_PROJECT_ROOT / "common/gemnet/gemnet-dT.json"
+LEGACY_SCALE_FILE = Path("/scratch/amlt_code/mattergen/common/gemnet/gemnet-dT.json")
+
+
+def resolve_scale_file(scale_file: str | Path | None) -> str:
+    if scale_file is None:
+        return str(DEFAULT_SCALE_FILE)
+    if Path(scale_file) == LEGACY_SCALE_FILE:
+        warnings.warn(
+            "The checkpoint contains a legacy internal scale_file path; using the packaged "
+            "gemnet-dT.json instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return str(DEFAULT_SCALE_FILE)
+    return str(scale_file)
 
 
 @dataclass(frozen=True)
@@ -206,13 +225,13 @@ class GemNetT(torch.nn.Module):
         otf_graph: bool = False,
         output_init: str = "HeOrthogonal",
         activation: str = "swish",
+        scale_file: str | Path | None = None,
         max_cell_images_per_dim: int = 5,
         encoder_mode: bool = False,  #
         **kwargs,
     ):
         super().__init__()
-        scale_file = f"{MODELS_PROJECT_ROOT}/common/gemnet/gemnet-dT.json"
-        assert scale_file is not None, "`scale_file` is required."
+        scale_file = resolve_scale_file(scale_file)
 
         self.encoder_mode = encoder_mode
         self.num_targets = num_targets

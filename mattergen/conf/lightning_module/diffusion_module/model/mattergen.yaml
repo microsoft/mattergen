@@ -16,7 +16,6 @@ gemnet:
   num_blocks: 4
   regress_stress: true
   otf_graph: true
-  scale_file: ${oc.env:PROJECT_ROOT}/common/gemnet/gemnet-dT.json
 denoise_atom_types: true
 atom_type_diffusion: mask
 property_embeddings_adapt: {}
