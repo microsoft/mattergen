@@ -101,7 +101,7 @@ class BaseDataset(Dataset):
         Load a dataset from a specified cache path.
 
         Args:
-            name: Name of the reference dataset.
+            cache_path: Path to the cache directory containing the dataset.
             transforms: List of transforms to apply to **each datapoint** when loading, e.g., to make the lattice matrices symmetric.
             properties: List of properties to condition on.
             dataset_transforms: List of transforms to apply to the **whole dataset**, e.g., to filter out certain entries.
@@ -318,9 +318,8 @@ class NumAtomsCrystalDataset(BaseDataset):
 
         Args:
             num_atoms_distribution: A dictionary with the number of atoms as keys and the probability of that number of atoms as values.
+            num_samples: The number of samples to generate.
             transforms: List of transforms to apply to **each datapoint** when loading, e.g., to make the lattice matrices symmetric.
-            properties: List of properties to condition on.
-            dataset_transforms: List of transforms to apply to the **whole dataset**, e.g., to filter out certain entries.
 
         Returns:
             The dataset.
